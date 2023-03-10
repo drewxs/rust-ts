@@ -1,0 +1,30 @@
+name: Update dependencies
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * 1'
+
+jobs:
+  update-dependencies:
+    name: Update dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+      - name: Upgrade packages
+        run: pnpm up
+      - name: Commit and create PR
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: 'build(deps): update dependencies (automated)'
+          branch: 'build-deps-update-automated'
+          commit-message: 'build(deps): update dependencies (automated)'
