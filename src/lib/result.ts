@@ -1,141 +1,155 @@
-export enum ResultVariant {
-  Ok,
-  Err,
-}
-
 export type ResultPattern<T, E, R> = {
-  ok: (val: T) => R;
-  err: (err: E) => R;
+  ok: (v: T) => R;
+  err: (e: E) => R;
 };
 
-export class Result<T, E> {
-  private value: T | undefined;
-  private error: E | undefined;
-  private variant: ResultVariant;
+export interface IResult<T, E> {
+  is_ok: () => boolean;
+  is_err: () => boolean;
+  map<U>(op: (val: T) => U): Result<U, E>;
+  map_or<U>(def: U, op: (val: T) => U): U;
+  map_or_else<U>(def: () => U, op: (val: T) => U): U;
+  map_err<F>(op: (err: E) => Result<T, F>): Result<T, F>;
+  and(res: Result<T, E>): Result<T, E>;
+  and_then<U>(op: (val: T) => Result<U, E>): Result<U, E>;
+  or<U>(res: Result<U, E>): Result<T | U, E>;
+  or_else<F>(op: (err: E) => Result<T, F>): Result<T, F>;
+  unwrap(): T;
+  unwrap_or(def: T): T;
+  unwrap_or_else(op: () => T): T;
+  unwrap_err(): E;
+  unwrap_err_unchecked(): E;
+  unwrap_unchecked(): T;
+  copied(): Result<T, E>;
+  cloned(): Result<T, E>;
+  expect(msg: string): T;
+  match<R>(pattern: ResultPattern<T, E, R>): R;
+}
 
-  private constructor(variant: ResultVariant, value?: T, error?: E) {
-    this.variant = variant;
-    this.value = value;
-    this.error = error;
+export class Ok<T, E> implements IResult<T, E> {
+  private value: T;
+  constructor(val: T) {
+    this.value = val;
   }
-
-  static ok<T, E>(value: T): Result<T, E> {
-    return new Result<T, E>(ResultVariant.Ok, value);
+  is_ok = (): boolean => true;
+  is_err = (): boolean => false;
+  map<U>(op: (val: T) => U): Result<U, E> {
+    return new Ok<U, E>(op(this.value));
   }
-
-  static err<T, E>(error: E): Result<T, E> {
-    return new Result<T, E>(ResultVariant.Err, undefined, error);
+  map_or<U>(_: U, op: (val: T) => U): U {
+    return op(this.value);
   }
-
-  is_ok(): boolean {
-    return this.variant === ResultVariant.Ok;
+  map_or_else<U>(_: () => U, op: (val: T) => U): U {
+    return op(this.value);
   }
-
-  is_err(): boolean {
-    return this.variant === ResultVariant.Err;
+  map_err<F>(_: (err: E) => Result<T, F>): Result<T, F> {
+    return new Ok<T, F>(this.value);
   }
-
+  and(res: Result<T, E>): Result<T, E> {
+    return res;
+  }
+  and_then<U>(op: (val: T) => Result<U, E>): Result<U, E> {
+    return op(this.value);
+  }
+  or<U>(_: Result<U, E>): Result<T | U, E> {
+    return new Ok<T | U, E>(this.value);
+  }
+  or_else<F>(_: (err: E) => Result<T, F>): Result<T, F> {
+    return new Ok<T, F>(this.value);
+  }
   unwrap(): T {
-    if (this.is_ok()) {
-      return this.value as T;
-    } else {
-      throw new Error(`called \`unwrap()\` on an \`Err\` value: ${this.error}`);
-    }
+    return this.value;
   }
-
-  unwrap_or(optb: T): T {
-    if (this.is_ok()) {
-      return this.value as T;
-    } else {
-      return optb;
-    }
+  unwrap_or(_: T) {
+    return this.value;
   }
-
+  unwrap_or_else(_: () => T): T {
+    return this.value;
+  }
   unwrap_err(): E {
-    if (this.is_err()) {
-      return this.error as E;
-    } else {
-      throw new Error(`called \`unwrap_err()\` on an \`Ok\` value: ${this.value}`);
-    }
+    throw new Error('Called `unwrap_err()` on an `Ok` value');
   }
-
-  expect(msg: string): T {
-    if (this.is_ok()) {
-      return this.value as T;
-    } else {
-      throw new Error(msg);
-    }
+  unwrap_err_unchecked(): E {
+    throw new Error('Called `unwrap_err_unchecked()` on an `Ok` value');
   }
-
-  expect_err(msg: string): E {
-    if (this.is_err()) {
-      return this.error as E;
-    } else {
-      throw new Error(msg);
-    }
+  unwrap_unchecked(): T {
+    return this.value;
   }
-
-  map<U>(fn: (val: T) => U): Result<U, E> {
-    if (this.is_ok()) {
-      return Result.ok(fn(this.value as T));
-    } else {
-      return Result.err(this.error as E);
-    }
+  copied(): Result<T, E> {
+    return new Ok<T, E>(this.value);
   }
-
-  map_err<F>(fn: (err: E) => F): Result<T, F> {
-    if (this.is_err()) {
-      return Result.err(fn(this.error as E));
-    } else {
-      return Result.ok(this.value as T);
-    }
+  cloned(): Result<T, E> {
+    return new Ok<T, E>(this.value);
   }
-
-  and<U>(res: Result<U, E>): Result<U, E> {
-    if (this.is_ok()) {
-      return res;
-    } else {
-      return Result.err(this.error as E);
-    }
+  expect(_: string): T {
+    return this.value;
   }
-
-  and_then<U>(fn: (val: T) => Result<U, E>): Result<U, E> {
-    if (this.is_ok()) {
-      return fn(this.value as T);
-    } else {
-      return Result.err(this.error as E);
-    }
-  }
-
-  or<F>(res: Result<T, F>): Result<T, F> {
-    if (this.is_ok()) {
-      return Result.ok(this.value as T);
-    } else {
-      return res;
-    }
-  }
-
-  or_else<F>(fn: (err: E) => Result<T, F>): Result<T, F> {
-    if (this.is_ok()) {
-      return Result.ok(this.value as T);
-    } else {
-      return fn(this.error as E);
-    }
-  }
-
   match<R>(pattern: ResultPattern<T, E, R>): R {
-    if (this.is_ok()) {
-      return pattern.ok(this.value as T);
-    } else {
-      return pattern.err(this.error as E);
-    }
-  }
-
-  static from<T, E>(result: T | undefined, err: E | undefined): Result<T, E> {
-    if (result !== undefined) {
-      return Result.ok(result);
-    } else {
-      return Result.err(err as E);
-    }
+    return pattern.ok(this.value);
   }
 }
+
+export class Err<T, E> implements IResult<T, E> {
+  private err: E;
+  constructor(err: E) {
+    this.err = err;
+  }
+  is_ok = (): boolean => false;
+  is_err = (): boolean => true;
+  map<U>(_: (val: T) => U): Result<U, E> {
+    return new Err<U, E>(this.err);
+  }
+  map_or<U>(def: U, _: (val: T) => U): U {
+    return def;
+  }
+  map_or_else<U>(def: () => U, _: (val: T) => U): U {
+    return def();
+  }
+  map_err<F>(op: (err: E) => Result<T, F>): Result<T, F> {
+    return op(this.err);
+  }
+  and(_: Result<T, E>): Result<T, E> {
+    return new Err<T, E>(this.err);
+  }
+  and_then<U>(_: (val: T) => Result<U, E>): Result<U, E> {
+    return new Err<U, E>(this.err);
+  }
+  or<U>(res: Result<U, E>): Result<T | U, E> {
+    return res;
+  }
+  or_else<F>(op: (err: E) => Result<T, F>): Result<T, F> {
+    return op(this.err);
+  }
+  unwrap(): T {
+    throw new Error('called `unwrap()` on an `Err` value');
+  }
+  unwrap_or(def: T): T {
+    return def;
+  }
+  unwrap_or_else(op: () => T): T {
+    return op();
+  }
+  unwrap_err(): E {
+    return this.err;
+  }
+  unwrap_err_unchecked(): E {
+    return this.err;
+  }
+  unwrap_unchecked(): T {
+    throw new Error('Called `unwrap_unchecked()` on an `Err` value');
+  }
+  copied(): Result<T, E> {
+    return new Err<T, E>(this.err);
+  }
+  cloned(): Result<T, E> {
+    return new Err<T, E>(this.err);
+  }
+  expect(msg: string): T {
+    throw new Error(msg);
+  }
+  match<R>(pattern: ResultPattern<T, E, R>): R {
+    return pattern.err(this.err);
+  }
+}
+
+export type Result<T, E> = Ok<T, E> | Err<T, E>;
