@@ -1,5 +1,5 @@
 {
-  "name": "rs-ts",
+  "name": "rust-ts",
   "version": "1.0.0",
   "description": "Rust-y code in TypeScript, cause why not?",
   "author": "Andrew X. Shah <drewshah0@gmail.com> (https://github.com/drewxs/)",
@@ -20,7 +20,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "test": "jest",
-    "docs": "rm -rf docs && typedoc src/**/*.ts",
+    "doc": "rm -rf docs && typedoc src/**/*.ts",
     "lint": "eslint --no-ignore --max-warnings=0 --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "prepare": "npx simple-git-hooks"
