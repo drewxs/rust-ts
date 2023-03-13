@@ -1,4 +1,7 @@
-# rs-ts
+# rust-ts
+
+![GitHub deployments](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=docs&logo=vercel&logoColor=white)
+![release](https://github.com/drewxs/rust-ts/actions/workflows/release.yml/badge.svg)
 
 TypeScript implementations of Rust `std` modules like `Result<T, E>` and `Option<T>`.
 
