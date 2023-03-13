@@ -1,21 +1,26 @@
 {
-  "name": "typescript.rs",
+  "name": "rs-ts",
   "version": "1.0.0",
-  "description": "Rust in TypeScript",
+  "description": "Rust-y code in TypeScript, cause why not?",
   "author": "Andrew X. Shah <drewshah0@gmail.com> (https://github.com/drewxs/)",
   "keywords": [
     "typescript",
     "rust"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drewxs/rs-ts.git"
+  },
+  "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "license": "ISC",
   "files": [
-    "/dist"
+    "dist/*"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "test": "jest",
+    "docs": "rm -rf docs && typedoc src/**/*.ts",
     "lint": "eslint --no-ignore --max-warnings=0 --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "prepare": "npx simple-git-hooks"
@@ -42,6 +47,7 @@
     "semantic-release": "^20.1.1",
     "simple-git-hooks": "^2.8.1",
     "ts-jest": "^29.0.5",
+    "typedoc": "^0.23.26",
     "typescript": "4.9.5",
     "webpack": "^5.76.0"
   },
