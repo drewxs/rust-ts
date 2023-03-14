@@ -18,11 +18,11 @@ Should you use this in production? Probably not.
 
 ```bash
 # npm
-npm i rs-ts
+npm i rust-ts
 # yarn
-yarn add rs-ts
+yarn add rust-ts
 # pnpm
-pnpm i rs-ts
+pnpm i rust-ts
 ```
 
 ## Modules
@@ -34,14 +34,14 @@ pnpm i rs-ts
 #### Usage
 
 ```ts
-import { Ok, Err, Result } from 'rs-ts';
+import { Ok, Err, Result } from 'rust-ts';
 
 const divide = (x: number, y: number): Result<number, string> =>
   y === 0 ? new Err("Can't divide by zero") : new Ok(x / y);
 
 divide(10, 5) // 10 / 5 -> 2
   .and_then((z) => divide(z, 2)) // 2 / 2 -> 1
-  .map((z) => [z, z + 1]) // 1 -> 1 + 1 -> 2
+  .map((z) => [z, z + 1]) // 1 -> [1, 2]
   .match({
     ok: ([v, x]) => console.log(v + x), // 1 + 2 -> 3
     err: (e) => console.log(e),
