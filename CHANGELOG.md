@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/drewxs/rs-ts/compare/v1.0.0...v1.0.1) (2023-03-14)
+
+### Bug Fixes
+
+- **result:** mising generic `U` in `and` method for `Result` value type ([2f132d0](https://github.com/drewxs/rs-ts/commit/2f132d0ca0c4283161737742b5445e5f950c0d8c))
+- **result:** remove unchecked methods ([7754237](https://github.com/drewxs/rs-ts/commit/775423729f7fd168e5e4321094ae938ce37deab3))
+
 ## 1.0.0 (2023-03-13)
 
 ### Features
