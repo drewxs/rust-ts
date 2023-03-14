@@ -18,9 +18,6 @@ export interface IResult<T, E> {
   unwrap_or(def: T): T;
   unwrap_or_else(op: () => T): T;
   unwrap_err(): E;
-  unwrap_err_unchecked(): E;
-  unwrap_unchecked(): T;
-  copied(): Result<T, E>;
   cloned(): Result<T, E>;
   expect(msg: string): T;
   match<R>(pattern: ResultPattern<T, E, R>): R;
@@ -68,15 +65,6 @@ export class Ok<T, E> implements IResult<T, E> {
   }
   unwrap_err(): E {
     throw new Error('Called `unwrap_err()` on an `Ok` value');
-  }
-  unwrap_err_unchecked(): E {
-    throw new Error('Called `unwrap_err_unchecked()` on an `Ok` value');
-  }
-  unwrap_unchecked(): T {
-    return this.value;
-  }
-  copied(): Result<T, E> {
-    return new Ok<T, E>(this.value);
   }
   cloned(): Result<T, E> {
     return new Ok<T, E>(this.value);
@@ -131,15 +119,6 @@ export class Err<T, E> implements IResult<T, E> {
   }
   unwrap_err(): E {
     return this.err;
-  }
-  unwrap_err_unchecked(): E {
-    return this.err;
-  }
-  unwrap_unchecked(): T {
-    throw new Error('Called `unwrap_unchecked()` on an `Err` value');
-  }
-  copied(): Result<T, E> {
-    return new Err<T, E>(this.err);
   }
   cloned(): Result<T, E> {
     return new Err<T, E>(this.err);
