@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/drewxs/rs-ts.git"
+    "url": "git+https://github.com/drewxs/rust-ts.git"
   },
   "license": "MIT",
   "main": "dist/index.js",
