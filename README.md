@@ -1,7 +1,7 @@
 # rust-ts
 
-![GitHub deployments](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=docs&logo=vercel&logoColor=white)
 ![release](https://github.com/drewxs/rust-ts/actions/workflows/release.yml/badge.svg)
+![GitHub deployments](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=docs&logo=vercel&logoColor=white)
 
 TypeScript implementations of Rust `std` modules like `Result<T, E>` and `Option<T>`.
 
@@ -44,6 +44,8 @@ divide(10, 5) // 10 / 5 -> 2
   .map((z) => [z, z + 1]) // 1 -> [1, 2]
   .match({
     ok: ([v, x]) => console.log(v + x), // 1 + 2 -> 3
-    err: (e) => console.log(e),
+    err: (e) => console.log(e), // "Can't divide by zero"
   });
 ```
+
+Please refer to the [documentation](https://rust-ts.vercel.app/) for further details and usage examples of this library.
