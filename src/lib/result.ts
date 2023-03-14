@@ -10,7 +10,7 @@ export interface IResult<T, E> {
   map_or<U>(def: U, op: (val: T) => U): U;
   map_or_else<U>(def: () => U, op: (val: T) => U): U;
   map_err<F>(op: (err: E) => Result<T, F>): Result<T, F>;
-  and(res: Result<T, E>): Result<T, E>;
+  and<U>(res: Result<U, E>): Result<U, E>;
   and_then<U>(op: (val: T) => Result<U, E>): Result<U, E>;
   or<U>(res: Result<U, E>): Result<T | U, E>;
   or_else<F>(op: (err: E) => Result<T, F>): Result<T, F>;
@@ -42,7 +42,7 @@ export class Ok<T, E> implements IResult<T, E> {
   map_err<F>(_: (err: E) => Result<T, F>): Result<T, F> {
     return new Ok<T, F>(this.value);
   }
-  and(res: Result<T, E>): Result<T, E> {
+  and<U>(res: Result<U, E>): Result<U, E> {
     return res;
   }
   and_then<U>(op: (val: T) => Result<U, E>): Result<U, E> {
@@ -96,8 +96,8 @@ export class Err<T, E> implements IResult<T, E> {
   map_err<F>(op: (err: E) => Result<T, F>): Result<T, F> {
     return op(this.err);
   }
-  and(_: Result<T, E>): Result<T, E> {
-    return new Err<T, E>(this.err);
+  and<U>(_: Result<U, E>): Result<U, E> {
+    return new Err<U, E>(this.err);
   }
   and_then<U>(_: (val: T) => Result<U, E>): Result<U, E> {
     return new Err<U, E>(this.err);
