@@ -1,6 +1,6 @@
 {
   "name": "rust-ts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Rust-y code in TypeScript, cause why not?",
   "author": "Andrew X. Shah <drewshah0@gmail.com> (https://github.com/drewxs/)",
   "keywords": [

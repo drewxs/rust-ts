@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/drewxs/rust-ts/compare/v1.0.1...v1.0.2) (2023-03-14)
+
+### Bug Fixes
+
+- **npm:** repo url ([29a2faa](https://github.com/drewxs/rust-ts/commit/29a2faaceb99d0c31b222d0fae9b5d8444688d2b))
+
 ## [1.0.1](https://github.com/drewxs/rs-ts/compare/v1.0.0...v1.0.1) (2023-03-14)
 
 ### Bug Fixes
