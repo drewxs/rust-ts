@@ -1,3 +1,13 @@
+## [1.1.0](https://github.com/drewxs/rust-ts/compare/v1.0.2...v1.1.0) (2023-03-15)
+
+### Features
+
+- create Option type ([8be2578](https://github.com/drewxs/rust-ts/commit/8be2578a60a55a3126758abf2e97b95c0a822319))
+
+### Bug Fixes
+
+- **result:** various doc/type fixes, remove clone ([61c1da8](https://github.com/drewxs/rust-ts/commit/61c1da85c2800c1e3db9cb8cb23456a2febe3e76))
+
 ## [1.0.2](https://github.com/drewxs/rust-ts/compare/v1.0.1...v1.0.2) (2023-03-14)
 
 ### Bug Fixes
