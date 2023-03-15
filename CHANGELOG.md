@@ -1,3 +1,17 @@
+## [2.0.0](https://github.com/drewxs/rust-ts/compare/v1.1.0...v2.0.0) (2023-03-15)
+
+### ⚠ BREAKING CHANGES
+
+- CHANGE: Variant class exports replaced with wrapper functions.
+
+### Features
+
+- create constructor wrapper functions ([b3b4845](https://github.com/drewxs/rust-ts/commit/b3b4845b16d9cb85343cb9df86cacf33577eab51))
+
+### Bug Fixes
+
+- remove helper type exports ([02c067e](https://github.com/drewxs/rust-ts/commit/02c067e5bfe7d001ba1f9cfaebabe926b53136f0))
+
 ## [1.1.0](https://github.com/drewxs/rust-ts/compare/v1.0.2...v1.1.0) (2023-03-15)
 
 ### Features
