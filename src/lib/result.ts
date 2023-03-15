@@ -7,7 +7,7 @@
  * @typeParam R - The type of the overall result that can be returned from the computation,
  * regardless of whether it succeeded or failed.
  */
-export type ResultPattern<T, E, R> = {
+type ResultPattern<T, E, R> = {
   /**
    * A function that takes a value of type `T` and returns a value of type `R`.
    * This function should be called if the computation succeeds.
@@ -34,7 +34,7 @@ export type ResultPattern<T, E, R> = {
  * @typeParam T - The type of the successful result value.
  * @typeParam E - The type of the error value.
  */
-export interface IResult<T, E> {
+interface IResult<T, E> {
   /**
    * Checks if the result is an `Ok` value.
    *

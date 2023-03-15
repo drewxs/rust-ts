@@ -7,7 +7,7 @@ import { Err, Ok, Result } from './result';
  * @typeParam T - The type of the contents of the Option.
  * @typeParam R - The type of the result of the match pattern.
  */
-export type OptionPattern<T, R> = {
+type OptionPattern<T, R> = {
   /**
    * A function that takes a value of type `T` and returns a value of type `R`.
    * This function should be called if the Option contains a value.
@@ -32,7 +32,7 @@ export type OptionPattern<T, R> = {
  *
  * @typeParam T - The type of the contents of the Option.
  */
-export interface IOption<T> {
+interface IOption<T> {
   /**
    * Checks if the option is a `Some` value.
    *
