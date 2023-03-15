@@ -37,7 +37,7 @@ pnpm i rust-ts
 import { Ok, Err, Result } from 'rust-ts';
 
 const divide = (x: number, y: number): Result<number, string> =>
-  y === 0 ? new Err("Can't divide by zero") : new Ok(x / y);
+  y === 0 ? Err("Can't divide by zero") : Ok(x / y);
 
 divide(10, 5) // 10 / 5 -> 2
   .and_then((z) => divide(z, 2)) // 2 / 2 -> 1
