@@ -85,15 +85,6 @@ describe('Result', () => {
       });
     });
 
-    describe('cloned', () => {
-      it('should clone an Ok value', () => {
-        const val = new Ok(42);
-        const res = val.cloned();
-        expect(res.is_ok()).toBe(true);
-        expect(res.unwrap()).toBe(42);
-      });
-    });
-
     describe('match', () => {
       it('should match an Ok value to a pattern', () => {
         const val = new Ok(42);

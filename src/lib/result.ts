@@ -84,7 +84,7 @@ export interface IResult<T, E> {
    * x.map_or(42, (v) => v.length); // 3
    *
    * let x: Result<string, unknown> = new Err("bar");
-   * x.map_or(42, v=> v.length); // 42
+   * x.map_or(42, (v) => v.length); // 42
    * ```
    * @typeParam U - The type to map the `Ok` value to.
    * @param def - The default value to return if `Err`.
@@ -129,7 +129,7 @@ export interface IResult<T, E> {
 
   /**
    * Returns `res` if the result is `Ok`, otherwise returns the `Err` value.
-   * Arguments passed to and are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `and_then`, which is lazily evaluated.
+   * Arguments passed to `and` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `and_then`, which is lazily evaluated.
    *
    * @example
    * ```ts
@@ -149,11 +149,11 @@ export interface IResult<T, E> {
    *
    * @example
    * ```ts
-   * const sq_then_to_string = (x: number) => (x * x).toString();
+   * const parse_num = (s: string) => Number.isNan(Number(s)) ? new Err('NaN') : new Ok(Number(s));
    *
-   * new Ok(2).and_then(sq_then_to_string); // Ok('4')
-   * new Ok(3).and_then(sq_then_to_string); // Ok('9')
-   * new Err("NaN").and_then(sq_then_to_string); // Err('NaN')
+   * new Ok('2').and_then(parse_num); // Ok(2)
+   * new Ok('foo').and_then(parse_num); // Err('NaN')
+   * new Err('fail').and_then(parse_num); // Err('fail')
    * ```
    * @typeParam U - Success type of the result to return if `Ok`.
    * @param op - The function to call if `Ok`.
@@ -163,7 +163,7 @@ export interface IResult<T, E> {
 
   /**
    * Returns `res` if the result is `Err`, otherwise returns the `Ok` value.
-   * Arguments passed to or are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `or_else`, which is lazily evaluated.
+   * Arguments passed to `or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `or_else`, which is lazily evaluated.
    *
    * @example
    * ```ts
@@ -183,18 +183,17 @@ export interface IResult<T, E> {
    * let y = Ok(100);
    * x.or(y); // Ok(2)
    * ```
-   * @typeParams U - Success type of the result to return if `Err`.
    * @param res - The result to return if `Err`.
-   * @returns `res` if `Err`, otherwise`Ok` value.
+   * @returns `res` if `Err`, otherwise `Ok` value.
    */
-  or<U>(res: Result<U, E>): Result<T | U, E>;
+  or(res: Result<T, E>): Result<T, E>;
 
   /**
    * Calls `op` if the result is `Err`, otherwise returns the `Ok` value.
    *
    * @example
    * ```ts
-   * const sq = (x: number) => x * x;
+   * const sq = (x: number) => new Ok(x * x);
    * const err = (x: number) => new Err(x);
    *
    * new Ok(2).or_else(sq).or_else(sq); // Ok(2)
@@ -255,7 +254,7 @@ export interface IResult<T, E> {
    * @param op - The closure to compute a default value if `Err`.
    * @returns The contained `Ok` value or the result of the closure if `Err`.
    */
-  unwrap_or_else(op: () => T): T;
+  unwrap_or_else(op: (err: E) => T): T;
 
   /**
    * Returns the contained `Err` value.
@@ -274,20 +273,6 @@ export interface IResult<T, E> {
   unwrap_err(): E;
 
   /**
-   * Clones the result.
-   *
-   * @example
-   * ```ts
-   * let x = new Ok(42);
-   * let y = x.cloned();
-   * y.is_ok(); // true
-   * y.unwrap(); // 42
-   * ```
-   * @returns A clone of the result.
-   */
-  cloned(): Result<T, E>;
-
-  /**
    * Returns the contained `Ok` value if it exists, otherwise throws an Error with the provided message.
    *
    * @example
@@ -297,7 +282,7 @@ export interface IResult<T, E> {
    * ```
    * @param msg - The message to use if the value is an `Err`.
    * @returns The contained `Ok` value.
-   * @throws {Error} If the value is an `Err`, with a message provided by the `Err`'s value.
+   * @throws {Error} If the value is an `Err`, with a message provided by `msg`.
    */
   expect(msg: string): T;
 
@@ -362,14 +347,11 @@ export class Ok<T, E> implements IResult<T, E> {
   unwrap_or(_: T) {
     return this.value;
   }
-  unwrap_or_else(_: () => T): T {
+  unwrap_or_else(_: (_: E) => T): T {
     return this.value;
   }
   unwrap_err(): E {
     throw new Error('Called `unwrap_err()` on an `Ok` value');
-  }
-  cloned(): Result<T, E> {
-    return new Ok<T, E>(this.value);
   }
   expect(_: string): T {
     return this.value;
@@ -422,14 +404,11 @@ export class Err<T, E> implements IResult<T, E> {
   unwrap_or(def: T): T {
     return def;
   }
-  unwrap_or_else(op: () => T): T {
-    return op();
+  unwrap_or_else(op: (err: E) => T): T {
+    return op(this.err);
   }
   unwrap_err(): E {
     return this.err;
-  }
-  cloned(): Result<T, E> {
-    return new Err<T, E>(this.err);
   }
   expect(msg: string): T {
     throw new Error(msg);
