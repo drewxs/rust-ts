@@ -4,8 +4,10 @@ node_modules
 # testing
 coverage
 
-# build
+# output
 dist
+docs
+CHANGELOG.md
 
 # misc
 .DS_Store

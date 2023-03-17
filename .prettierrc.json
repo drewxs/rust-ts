@@ -1,14 +1,7 @@
 {
-  "editorconfig": true,
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
-  "arrowParens": "always",
-  "useTabs": false,
-  "tabWidth": 2,
-  "printWidth": 100,
+  "arrowParens": "avoid",
+  "printWidth": 80,
   "semi": true,
-  "bracketSpacing": true,
-  "singleQuote": true,
-  "jsxSingleQuote": true,
+  "bracketSpacing": false,
   "trailingComma": "all"
 }
