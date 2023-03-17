@@ -1,3 +1,11 @@
+## [2.1.0](https://github.com/drewxs/rust-ts/compare/v2.0.0...v2.1.0) (2023-03-17)
+
+
+### Features
+
+* create standalone match function ([20f7e49](https://github.com/drewxs/rust-ts/commit/20f7e496dcc41e3a681d53b85b7e07d3089a5c7f))
+* create type guards for `Result` & `Option` ([63d05df](https://github.com/drewxs/rust-ts/commit/63d05df302067a33b2210e958d76798ee5762668))
+
 ## [2.0.0](https://github.com/drewxs/rust-ts/compare/v1.1.0...v2.0.0) (2023-03-15)
 
 ### ⚠ BREAKING CHANGES
