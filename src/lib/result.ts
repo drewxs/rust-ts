@@ -4,9 +4,9 @@ import {Option} from "./option";
  * Represents a pattern for handling the result of a computation that can either succeed
  * with a value of type `T` or fail with an error of type `E`.
  *
- * @typeParam T - The type of the successful result value.
- * @typeParam E - The type of the error value.
- * @typeParam R - The type of the overall result that can be returned from the computation,
+ * @typeParam T - The type of the value contained in the `Result`.
+ * @typeParam E - The type of the value contained in the `Err`.
+ * @typeParam R - The type of the result of the match pattern.
  * regardless of whether it succeeded or failed.
  */
 export type ResultPattern<T, E, R> = {
@@ -33,10 +33,10 @@ export type ResultPattern<T, E, R> = {
  * Represents the outcome of a computation that can either succeed with a value of type `T`
  * or fail with an error of type `E`.
  *
- * @typeParam T - The type of the successful result value.
- * @typeParam E - The type of the error value.
+ * @typeParam T - The type of the value contained in the `Result`.
+ * @typeParam E - The type of the value contained in the `Err`.
  */
-interface IResult<T, E> {
+export interface IResult<T, E> {
     /**
      * Checks if the result is an `Ok` value.
      *
@@ -299,7 +299,9 @@ interface IResult<T, E> {
      *  err: (_) => 'Unexpected error'
      * }); // '42'
      * ```
-     * @typeParam R - The return type of the pattern.
+     * @typeParam T - The type of the value contained in the `Result`.
+     * @typeParam E - The type of the value contained in the `Err`.
+     * @typeParam R - The type of the result of the match pattern.
      * @param pattern - The pattern to match over.
      * @returns The result of the pattern match.
      */
@@ -309,8 +311,8 @@ interface IResult<T, E> {
 /**
  * Result variant that contains the success value.
  *
- * @typeParam T - The type of the successful result value.
- * @typeParam E - The type of the error value.
+ * @typeParam T - The type of the value contained in the `Result`.
+ * @typeParam E - The type of the value contained in the `Err`.
  */
 export class Ok<T, E> implements IResult<T, E> {
     private value: T;
@@ -366,8 +368,8 @@ export class Ok<T, E> implements IResult<T, E> {
 /**
  * Result variant that contains the error value.
  *
- * @typeParam T - The type of the successful result value.
- * @typeParam E - The type of the error value.
+ * @typeParam T - The type of the value contained in the `Result`.
+ * @typeParam E - The type of the value contained in the `Err`.
  */
 export class Err<T, E> implements IResult<T, E> {
     private err: E;
@@ -423,15 +425,17 @@ export class Err<T, E> implements IResult<T, E> {
 /**
  * A type that represents either success (`Ok`) or failure (`Err`).
  *
- * @typeParam T - The type of the successful result value.
- * @typeParam E - The type of the error value.
+ * @typeParam T - The type of the value contained in the `Result`.
+ * @typeParam E - The type of the value contained in the `Err`.
  */
 export type Result<T, E> = Ok<T, E> | Err<T, E>;
 
 /**
  * `Result` type guard.
  *
- * @typeParam input - The value to check.
+ * @typeParam T - The type of the value contained in the `Result`.
+ * @typeParam E - The type of the value contained in the `Err`.
+ * @param input - The `Result` or `Option` to check.
  * @returns `true` if `input` is a `Result`, `false` otherwise.
  */
 export const is_result = <T, E>(

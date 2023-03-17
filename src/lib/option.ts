@@ -4,7 +4,7 @@ import {Err, Ok, Result} from "./result";
  * Represents a pattern for handling the result of a computation that can either produce
  * a value of type `T` or not produce a value.
  *
- * @typeParam T - The type of the contents of the Option.
+ * @typeParam T - The type of the value contained in the `Option`.
  * @typeParam R - The type of the result of the match pattern.
  */
 export type OptionPattern<T, R> = {
@@ -32,7 +32,7 @@ export type OptionPattern<T, R> = {
  *
  * @typeParam T - The type of the contents of the Option.
  */
-interface IOption<T> {
+export interface IOption<T> {
     /**
      * Checks if the option is a `Some` value.
      *
@@ -294,7 +294,8 @@ interface IOption<T> {
      *  none: () => 'Unexpected error'
      * }); // '42'
      * ```
-     * @typeParam R - The return type of the pattern.
+     * @typeParam T - The type of the value contained in the `Option`.
+     * @typeParam R - The type of the result of the match pattern.
      * @param pattern - The pattern to match over.
      * @returns The result of the pattern match.
      */
@@ -360,7 +361,7 @@ export class Some<T> implements IOption<T> {
 /**
  * Option variant that contains the error value.
  *
- * @typeParam T - The type of the successful result value.
+ * @typeParam T - The type of the value contained in the `Option`.
  */
 export class None<T> implements IOption<T> {
     is_some = (): boolean => false;
@@ -415,8 +416,7 @@ export class None<T> implements IOption<T> {
 /**
  * A type that represents either success (`Some`) or failure (`None`).
  *
- * @typeParam T - The type of the successful result value.
- * @typeParam E - The type of the error value.
+ * @typeParam T - The type of the value contained in the `Option`.
  */
 export type Option<T> = Some<T> | None<T>;
 
@@ -425,6 +425,14 @@ export type Option<T> = Some<T> | None<T>;
  *
  * @typeParam input - The value to check.
  * @returns `true` if `input` is an `Option`, `false` otherwise.
+ */
+/**
+ * `Option` type guard.
+ *
+ * @typeParam T - The type of the value contained in the `Option`.
+ * @typeParam E - The type of the value contained in the `Err`.
+ * @param input - The `Result` or `Option` to check.
+ * @returns `true` if `input` is a `Option`, `false` otherwise.
  */
 export const is_option = <T, E>(
     input: Result<T, E> | Option<T>,
