@@ -5,14 +5,15 @@
 
 TypeScript implementations of Rust `std` modules like `Result<T, E>` and `Option<T>`.
 
-Should you use this in production? Probably not.
+[Documentation](https://rust-ts.vercel.app/)
 
 ## Contents
 
-- [Installation](#Installation)
-- [Modules](#Modules)
-  - [Result](#Result)
-  - [Option](#Option)
+-   [Installation](#Installation)
+-   [Modules](#Modules)
+    -   [Result](#Result)
+    -   [Option](#Option)
+    -   [Match](#Match)
 
 ## Installation
 
@@ -29,23 +30,92 @@ pnpm i rust-ts
 
 ### Result
 
-`Result<T,E>` is an union type that is either `Ok<T, E>` or `Err<T, E>` representing success and error values.
+`Result<T, E>` is the type used for returning and propagating errors. It is an union type with the variants, `Ok<T, E>`, representing success and containing a value, and `Err(E)`, representing error and containing an error value.
+
+```typescript
+type Result<T, E> = Ok<T, E> | Err<T, E>;
+```
 
 #### Usage
 
-```ts
-import { Ok, Err, Result } from 'rust-ts';
+```typescript
+import {Ok, Err, Result} from "rust-ts";
 
 const divide = (x: number, y: number): Result<number, string> =>
-  y === 0 ? Err("Can't divide by zero") : Ok(x / y);
+    y === 0 ? Err("Can't divide by zero") : Ok(x / y);
 
-divide(10, 5) // 10 / 5 -> 2
-  .and_then((z) => divide(z, 2)) // 2 / 2 -> 1
-  .map((z) => [z, z + 1]) // 1 -> [1, 2]
-  .match({
-    ok: ([v, x]) => console.log(v + x), // 1 + 2 -> 3
-    err: (e) => console.log(e), // "Can't divide by zero"
-  });
+divide(10, 5)
+    .and_then(z => divide(z, 2))
+    .map(z => [z, z + 1])
+    .match({
+        ok: ([v, x]) => console.log(v + x),
+        err: e => console.log(e),
+    });
 ```
 
-Please refer to the [documentation](https://rust-ts.vercel.app/) for further details and usage examples of this library.
+### Option
+
+`Option<T>` represents an optional value: every `Option` is either `Some` and contains a value, or `None`, and does not.
+
+```typescript
+type Option<T> = Some<T> | None<T>;
+```
+
+#### Usage
+
+```typescript
+import {Some, None, Option, match} from "rust-ts";
+
+const divide = (x: number, y: number): Option<number> =>
+    y === 0 ? None() : Some(x / y);
+
+const result = divide(2.0, 3.0);
+
+match(result, {
+    some: x => console.log(x),
+    none: () => console.log("Cannot divide by zero"),
+});
+```
+
+### Match
+
+`match` is available as a standalone function as well as defined methods for `Result` and `Option`.
+
+#### Usage
+
+```typescript
+import {Some, None, Option, Err, Ok, Result, match} from "rust-ts";
+
+const add = (x: number, y: number): Option<number> =>
+    y === 0 ? None() : Some(x + y);
+
+const divide = (x: number, y: number): Result<number, string> =>
+    y === 0 ? Err("Cannot divide by zero") : Ok(x + y);
+
+const option = add(3, 4);
+option.match({
+    some: x => console.log(x),
+    none: () => console.log("none"),
+});
+
+const result = option.ok_or("error");
+result.map(x => x + 1);
+result.and_then(x => divide(x, 2));
+match(result, {
+    ok: x => console.log(x),
+    err: e => console.log(e),
+});
+```
+
+### Contributing
+
+1. Fork the repo
+2. Create changes
+3. Update tests
+4. Update docs
+5. Ensure linting and tests pass
+6. Issue PR
+7. ???
+8. Profit
+
+Refer to the [docs](https://rust-ts.vercel.app/) for more details and examples.
