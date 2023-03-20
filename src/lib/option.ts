@@ -9,8 +9,7 @@ import {Err, Ok, Result} from "./result";
  */
 export type OptionPattern<T, R> = {
     /**
-     * A function that takes a value of type `T` and returns a value of type `R`.
-     * This function should be called if the Option contains a value.
+     * Function to execute if the `Option` is `Some`.
      *
      * @param v - The wrapped value of type `T`.
      * @returns A value of type `R`.
@@ -18,8 +17,7 @@ export type OptionPattern<T, R> = {
     some: (v: T) => R;
 
     /**
-     * A function that produces a value of type `R`.
-     * This function should be called if the Option is empty.
+     * Function to execute if the `Option` is `None`.
      *
      * @returns A value of type `R`.
      */
@@ -38,22 +36,22 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * let x = new Some(2);
+     * let x = Some(2);
      * x.is_some(); // true
      * ```
-     * @returns `true` if the result is `Some`.
+     * @returns `true` if the option is `Some`.
      */
     is_some: () => boolean;
 
     /**
-     * Checks if the result is a `None` value.
+     * Checks if the option is a `None` value.
      *
      * @example
      * ```ts
-     * let x = new None();
+     * let x = None();
      * x.is_none(); // true
      * ```
-     * @returns `true` if the result is `None`.
+     * @returns `true` if the option is `None`.
      */
     is_none: () => boolean;
 
@@ -63,7 +61,7 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * let x = new Some(2)
+     * let x = Some(2)
      * x.map(x => x + 3); // Some(5)
      * ```
      * @typeParam U - The type to map the `Some` value to.
@@ -78,10 +76,10 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * let x = new Some('foo');
+     * let x = Some('foo');
      * x.map_or(42, (v) => v.length); // 3
      *
-     * let x: Option<string> = new None();
+     * let x: Option<string> = None();
      * x.map_or(42, (v) => v.length); // 42
      * ```
      * @typeParam U - The type to map the `Some` value to.
@@ -98,7 +96,7 @@ export interface IOption<T> {
      * @example
      * ```ts
      * let k = 21;
-     * let x = new Some('foo');
+     * let x = Some('foo');
      * x.map_or_else(() => k * 2, v => v.length); // 3
      * ```
      * @typeParam U - The type to map the `Some` value to.
@@ -138,23 +136,23 @@ export interface IOption<T> {
     ok_or_else<E>(err: () => E): Result<T, E>;
 
     /**
-     * Returns `res` if the result is `Some`, otherwise returns the `None` value.
+     * Returns `res` if the option is `Some`, otherwise returns the `None` value.
      * Arguments passed to `and` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `and_then`, which is lazily evaluated.
      *
      * @example
      * ```ts
-     * let x = new Some(2);
-     * let y = new None();
+     * let x = Some(2);
+     * let y = None();
      * x.and(y); // None()
      * ```
-     * @typeParam U - Success type of the result to return if `Some`.
+     * @typeParam U - Success type of the option to return if `Some`.
      * @param res - The result to return if `Some`.
      * @returns `res` if the result is `Some`, otherwise `None`.
      */
     and<U>(res: Option<U>): Option<U>;
 
     /**
-     * Calls `op` if the result is `Some`, otherwise returns the `None` value.
+     * Calls `op` if the option is `Some`, otherwise returns the `None` value.
      * This function can be used for control flow based on `Option` values.
      * This is a monadic bind operation:
      *     `x.and_then((v) => v)` is equivalent to `x`.
@@ -162,20 +160,20 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * const parse_num = (s: string) => Number.isNan(Number(s)) ? new None<number>() : new Some(Number(s));
+     * const parse_num = (s: string) => Number.isNan(Number(s)) ? None<number>() : Some(Number(s));
      *
-     * new Some('2').and_then(parse_num); // Some(2)
-     * new Some('foo').and_then(parse_num); // None()
-     * new None<string>().and_then(parse_num); // None()
+     * Some('2').and_then(parse_num); // Some(2)
+     * Some('foo').and_then(parse_num); // None()
+     * None<string>().and_then(parse_num); // None()
      * ```
-     * @typeParam U - Success type of the result to return if `Some`.
+     * @typeParam U - Success type of the option to return if `Some`.
      * @param op - The function to call if `Some`.
-     * @returns The result of calling `op` if the result is `Some`, otherwise returns the `None` value.
+     * @returns The result of calling `op` if the option is `Some`, otherwise returns the `None` value.
      */
     and_then<U>(op: (val: T) => Option<U>): Option<U>;
 
     /**
-     * Returns `res` if the result is `None`, otherwise returns the `Some` value.
+     * Returns `res` if the option is `None`, otherwise returns the `Some` value.
      * Arguments passed to `or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `or_else`, which is lazily evaluated.
      *
      * @example
@@ -207,10 +205,10 @@ export interface IOption<T> {
      * @example
      * ```ts
      * const sq = (x: number) => x * x;
-     * const err = (x: number) => new None(x);
+     * const err = (x: number) => None(x);
      *
-     * let nobody = () => new None();
-     * let vikings = () => new Some("vikings");
+     * let nobody = () => None();
+     * let vikings = () => Some("vikings");
      *
      * Some("barbarians").or_else(vikings); // Some("barbarians")
      * None().or_else(vikings); // Some("vikings")
@@ -227,10 +225,10 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * let x = new Some(2);
+     * let x = Some(2);
      * x.unwrap(); // 2
      *
-     * let y = new None();
+     * let y = None();
      * y.unwrap(); // throws error
      * ```
      * @returns The contained `Some` value.
@@ -244,10 +242,10 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * let x = new Some(42);
+     * let x = Some(42);
      * x.unwrap_or(7); // 42
      *
-     * let y = new None();
+     * let y = None();
      * y.unwrap_or(7); // 7
      * ```
      * @param def - The default value to return if `None`.
@@ -261,8 +259,8 @@ export interface IOption<T> {
      * @example
      * ```ts
      * const k = 10;
-     * new Some(4).unwrap_or_else(|| 2 * k); // 4
-     * new None().unwrap_or_else(|| 2 * k); // 20
+     * Some(4).unwrap_or_else(|| 2 * k); // 4
+     * None().unwrap_or_else(|| 2 * k); // 20
      * ```
      * @param op - The closure to compute a default value if `None`.
      * @returns The contained `Some` value or the result of the closure if `None`.
@@ -274,7 +272,7 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * let x = new None();
+     * let x = None();
      * x.expect('Testing expect'); // throws Error('Testing expect')
      * ```
      * @param msg - The message to use if the value is an `None`.
@@ -288,7 +286,7 @@ export interface IOption<T> {
      *
      * @example
      * ```ts
-     * let x = new Some(42);
+     * let x = Some(42);
      * let y = x.match({
      *  some: (val) => val.toString(),
      *  none: () => 'Unexpected error'

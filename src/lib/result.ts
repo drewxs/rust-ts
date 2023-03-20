@@ -7,12 +7,10 @@ import {Option} from "./option";
  * @typeParam T - The type of the value contained in the `Result`.
  * @typeParam E - The type of the value contained in the `Err`.
  * @typeParam R - The type of the result of the match pattern.
- * regardless of whether it succeeded or failed.
  */
 export type ResultPattern<T, E, R> = {
     /**
-     * A function that takes a value of type `T` and returns a value of type `R`.
-     * This function should be called if the computation succeeds.
+     * Function to execute if the `Result` is `Ok`.
      *
      * @param v - The successful result value of type `T`.
      * @returns A value of type `R`.
@@ -20,8 +18,7 @@ export type ResultPattern<T, E, R> = {
     ok: (v: T) => R;
 
     /**
-     * A function that takes a value of type `E` and returns a value of type `R`.
-     * This function should be called if the computation fails.
+     * Function to execute if the `Result` is `Err`.
      *
      * @param e - The error value of type `E`.
      * @returns A value of type `R`.
@@ -42,7 +39,7 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok(2);
+     * let x = Ok(2);
      * x.is_ok(); // true
      * ```
      * @returns `true` if the result is `Ok`.
@@ -54,7 +51,7 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Err("Some error message");
+     * let x = Err("Some error message");
      * x.is_err(); // true
      * ```
      * @returns `true` if the result is `Err`.
@@ -67,7 +64,7 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok(2)
+     * let x = Ok(2)
      * x.map(x => x + 3); // Ok(5)
      * ```
      * @typeParam U - The type to map the `Ok` value to.
@@ -82,10 +79,10 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok('foo');
+     * let x = Ok('foo');
      * x.map_or(42, (v) => v.length); // 3
      *
-     * let x: Result<string, unknown> = new Err("bar");
+     * let x: Result<string, unknown> = Err("bar");
      * x.map_or(42, (v) => v.length); // 42
      * ```
      * @typeParam U - The type to map the `Ok` value to.
@@ -102,7 +99,7 @@ export interface IResult<T, E> {
      * @example
      * ```ts
      * let k = 21;
-     * let x = new Ok('foo');
+     * let x = Ok('foo');
      * x.map_or_else(() => k * 2, v => v.length); // 3
      * ```
      * @typeParam U - The type to map the `Ok` value to.
@@ -118,8 +115,8 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Err(2);
-     * let y = x.map_err(e => new Err(`error code: ${e}`));
+     * let x = Err(2);
+     * let y = x.map_err(e => Err(`error code: ${e}`));
      * y.is_err(); // false
      * y.unwrap(); // 2
      * ```
@@ -135,8 +132,8 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok(2);
-     * let y = new Err('late error');
+     * let x = Ok(2);
+     * let y = Err('late error');
      * x.and(y); // Err('late error')
      * ```
      * @typeParam U - Success type of the result to return if `Ok`.
@@ -151,11 +148,11 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * const parse_num = (s: string) => Number.isNan(Number(s)) ? new Err('NaN') : new Ok(Number(s));
+     * const parse_num = (s: string) => Number.isNan(Number(s)) ? Err('NaN') : Ok(Number(s));
      *
-     * new Ok('2').and_then(parse_num); // Ok(2)
-     * new Ok('foo').and_then(parse_num); // Err('NaN')
-     * new Err('fail').and_then(parse_num); // Err('fail')
+     * Ok('2').and_then(parse_num); // Ok(2)
+     * Ok('foo').and_then(parse_num); // Err('NaN')
+     * Err('fail').and_then(parse_num); // Err('fail')
      * ```
      * @typeParam U - Success type of the result to return if `Ok`.
      * @param op - The function to call if `Ok`.
@@ -195,13 +192,13 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * const sq = (x: number) => new Ok(x * x);
-     * const err = (x: number) => new Err(x);
+     * const sq = (x: number) => Ok(x * x);
+     * const err = (x: number) => Err(x);
      *
-     * new Ok(2).or_else(sq).or_else(sq); // Ok(2)
-     * new Ok(2).or_else(err).or_else(sq); // Ok(2)
-     * new Ok(3).or_else(sq).or_else(err); // Ok(9)
-     * new Ok(3).or_else(err).or_else(err); // Ok(3)
+     * Ok(2).or_else(sq).or_else(sq); // Ok(2)
+     * Ok(2).or_else(err).or_else(sq); // Ok(2)
+     * Ok(3).or_else(sq).or_else(err); // Ok(9)
+     * Ok(3).or_else(err).or_else(err); // Ok(3)
      * ```
      * @typeParam F - Error type of the result to return if `Err`.
      * @param op - The function to call if `Err`.
@@ -215,10 +212,10 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok(2);
+     * let x = Ok(2);
      * x.unwrap(); // 2
      *
-     * let y = new Err('emergency failure');
+     * let y = Err('emergency failure');
      * y.unwrap(); // throws 'emergency failure'
      * ```
      * @returns The contained `Ok` value.
@@ -232,10 +229,10 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok(42);
+     * let x = Ok(42);
      * x.unwrap_or(7); // 42
      *
-     * let y = new Err('error');
+     * let y = Err('error');
      * y.unwrap_or(7); // 7
      * ```
      * @param def - The default value to return if `Err`.
@@ -250,8 +247,8 @@ export interface IResult<T, E> {
      * ```ts
      * const count = (x: string): number => x.length;
      *
-     * let x = new Ok(2).unwrap_or_else(count); // 2
-     * let y = new Err('foo').unwrap_or_else(count); // 3
+     * let x = Ok(2).unwrap_or_else(count); // 2
+     * let y = Err('foo').unwrap_or_else(count); // 3
      * ```
      * @param op - The closure to compute a default value if `Err`.
      * @returns The contained `Ok` value or the result of the closure if `Err`.
@@ -264,10 +261,10 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok(2);
+     * let x = Ok(2);
      * x.unwrap_err(); // throws Error('called `unwrap_err()` on an `Ok` value')
      *
-     * let y = new Err('emergency failure');
+     * let y = Err('emergency failure');
      * y.unwrap_err(); // 'emergency failure'
      * ```
      * @returns The contained `Err` value.
@@ -279,7 +276,7 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Err('emergency failure');
+     * let x = Err('emergency failure');
      * x.expect('Testing expect'); // throws Error('Testing expect')
      * ```
      * @param msg - The message to use if the value is an `Err`.
@@ -293,7 +290,7 @@ export interface IResult<T, E> {
      *
      * @example
      * ```ts
-     * let x = new Ok(42);
+     * let x = Ok(42);
      * let y = x.match({
      *  ok: (val) => val.toString(),
      *  err: (_) => 'Unexpected error'
