@@ -1,3 +1,10 @@
+## [2.2.0](https://github.com/drewxs/rust-ts/compare/v2.1.0...v2.2.0) (2023-03-20)
+
+
+### Features
+
+* **lib:** implement `if_let` ([db84d64](https://github.com/drewxs/rust-ts/commit/db84d64cd2fa6c2143bf28a55709aaa9aecd7c39))
+
 ## [2.1.0](https://github.com/drewxs/rust-ts/compare/v2.0.0...v2.1.0) (2023-03-17)
 
 
