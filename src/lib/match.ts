@@ -33,17 +33,13 @@ export function match<T, E, R>(
 ): R {
     if (is_result(input)) {
         const result = input as Result<T, E>;
-        if (result.is_ok()) {
-            return (pattern as ResultPattern<T, E, R>).ok(result.unwrap());
-        } else {
-            return (pattern as ResultPattern<T, E, R>).err(result.unwrap_err());
-        }
+        const result_pattern = pattern as ResultPattern<T, E, R>;
+        if (result.is_ok()) return result_pattern.ok(result.unwrap());
+        return result_pattern.err(result.unwrap_err());
     } else {
         const option = input as Option<T>;
-        if (option.is_some()) {
-            return (pattern as OptionPattern<T, R>).some(option.unwrap());
-        } else {
-            return (pattern as OptionPattern<T, R>).none();
-        }
+        const option_pattern = pattern as OptionPattern<T, R>;
+        if (option.is_some()) return option_pattern.some(option.unwrap());
+        return option_pattern.none();
     }
 }
