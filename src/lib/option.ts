@@ -25,6 +25,29 @@ export type OptionPattern<T, R> = {
 };
 
 /**
+ * if let pattern for `Option` variants.
+ *
+ * @typeParam T - The type of the value contained in the `Option`.
+ * @typeParam R - The type of the result of the match pattern.
+ */
+export type IfLetOptionPattern<T, R> = {
+    /**
+     * Function to execute if the `Option` is `Some`.
+     *
+     * @param v - The wrapped value of type `T`.
+     * @returns A value of type `R`.
+     */
+    some: (v: T) => R;
+
+    /**
+     * Function to execute if the `Option` is `None`.
+     *
+     * @returns A value of type `R`.
+     */
+    else?: () => R;
+};
+
+/**
  * Represents the outcome of a computation that can either produce
  * a value of type `T` or not produce a value.
  *
@@ -298,6 +321,24 @@ export interface IOption<T> {
      * @returns The result of the pattern match.
      */
     match<R>(pattern: OptionPattern<T, R>): R;
+
+    /**
+     * Pattern matches over `some` and `none` variants with a conditional else defaulting to `0`.
+     *
+     * @example
+     * ```ts
+     * let x = Some(42);
+     * let y = x.match({
+     *  some: val => String(val),
+     *  else: _ => 'Unexpected error' // optional
+     * }); // '42'
+     * ```
+     * @typeParam T - The type of the value contained in the `Option`.
+     * @typeParam R - The type of the result of the match pattern.
+     * @param pattern - The pattern to match over.
+     * @returns The result of the pattern match.
+     */
+    if_let<R>(pattern: IfLetOptionPattern<T, R>): R;
 }
 
 /**
@@ -354,6 +395,9 @@ export class Some<T> implements IOption<T> {
     match<R>(pattern: OptionPattern<T, R>): R {
         return pattern.some(this.value);
     }
+    if_let<R>(pattern: IfLetOptionPattern<T, R>): R {
+        return pattern.some(this.value);
+    }
 }
 
 /**
@@ -408,6 +452,10 @@ export class None<T> implements IOption<T> {
     }
     match<R>(pattern: OptionPattern<T, R>): R {
         return pattern.none();
+    }
+    if_let<R>(pattern: IfLetOptionPattern<T, R>): R {
+        if (pattern.else) return pattern.else();
+        return 0 as R;
     }
 }
 

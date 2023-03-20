@@ -27,6 +27,31 @@ export type ResultPattern<T, E, R> = {
 };
 
 /**
+ * if let pattern for `Result` variants.
+ *
+ * @typeParam T - The type of the value contained in the `Result`.
+ * @typeParam E - The type of the value contained in the `Err`.
+ * @typeParam R - The type of the result of the match pattern.
+ */
+export type IfLetResultPattern<T, E, R> = {
+    /**
+     * Function to execute if the `Result` is `Ok`.
+     *
+     * @param v - The successful result value of type `T`.
+     * @returns A value of type `R`.
+     */
+    ok: (v: T) => R;
+
+    /**
+     * Function to execute if the `Result` is `Err`.
+     *
+     * @param e - The error value of type `E`.
+     * @returns A value of type `R`.
+     */
+    else?: (e?: E) => R;
+};
+
+/**
  * Represents the outcome of a computation that can either succeed with a value of type `T`
  * or fail with an error of type `E`.
  *
@@ -292,8 +317,8 @@ export interface IResult<T, E> {
      * ```ts
      * let x = Ok(42);
      * let y = x.match({
-     *  ok: (val) => val.toString(),
-     *  err: (_) => 'Unexpected error'
+     *  ok: val => val.toString(),
+     *  err: _ => 'Unexpected error'
      * }); // '42'
      * ```
      * @typeParam T - The type of the value contained in the `Result`.
@@ -303,6 +328,25 @@ export interface IResult<T, E> {
      * @returns The result of the pattern match.
      */
     match<R>(pattern: ResultPattern<T, E, R>): R;
+
+    /**
+     * Pattern matches over `ok` and `err` variants with a conditional `else` defaulting to `0` that can optionally contain the `Err` value.
+     *
+     * @example
+     * ```ts
+     * let x = Ok(42);
+     * let y = x.match({
+     *  ok: val => String(val),
+     *  else: err => err // optional
+     * }); // '42'
+     * ```
+     * @typeParam T - The type of the value contained in the `Result`.
+     * @typeParam E - The type of the value contained in the `Err`.
+     * @typeParam R - The type of the result of the match pattern.
+     * @param pattern - The pattern to match over.
+     * @returns The result of the pattern match.
+     */
+    if_let<R>(pattern: IfLetResultPattern<T, E, R>): R;
 }
 
 /**
@@ -358,6 +402,9 @@ export class Ok<T, E> implements IResult<T, E> {
         return this.value;
     }
     match<R>(pattern: ResultPattern<T, E, R>): R {
+        return pattern.ok(this.value);
+    }
+    if_let<R>(pattern: IfLetResultPattern<T, E, R>): R {
         return pattern.ok(this.value);
     }
 }
@@ -416,6 +463,10 @@ export class Err<T, E> implements IResult<T, E> {
     }
     match<R>(pattern: ResultPattern<T, E, R>): R {
         return pattern.err(this.err);
+    }
+    if_let<R>(pattern: IfLetResultPattern<T, E, R>): R {
+        if (pattern.else) return pattern.else(this.err);
+        return 0 as R;
     }
 }
 

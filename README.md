@@ -1,7 +1,7 @@
 # rust-ts
 
-![release](https://github.com/drewxs/rust-ts/actions/workflows/release.yml/badge.svg)
-![GitHub deployments](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=docs&logo=vercel&logoColor=white)
+[![Build](https://github.com/drewxs/rust-ts/actions/workflows/release.yml/badge.svg)](https://github.com/drewxs/rust-ts/actions/workflows/release.yml)
+[![Docs](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=Docs&logo=vercel&logoColor=white)](https://rust-ts.vercel.app/)
 
 TypeScript implementations of Rust `std` modules like `Result<T, E>` and `Option<T>`.
 
@@ -13,7 +13,8 @@ TypeScript implementations of Rust `std` modules like `Result<T, E>` and `Option
 -   [Modules](#Modules)
     -   [Result](#Result)
     -   [Option](#Option)
-    -   [Match](#Match)
+    -   [match](#match)
+    -   [if_let](#if_let)
 
 ## Installation
 
@@ -36,7 +37,7 @@ pnpm i rust-ts
 type Result<T, E> = Ok<T, E> | Err<T, E>;
 ```
 
-#### Usage
+##### Usage
 
 ```typescript
 import {Ok, Err, Result} from "rust-ts";
@@ -61,7 +62,7 @@ divide(10, 5)
 type Option<T> = Some<T> | None<T>;
 ```
 
-#### Usage
+##### Usage
 
 ```typescript
 import {Some, None, Option, match} from "rust-ts";
@@ -77,11 +78,11 @@ match(result, {
 });
 ```
 
-### Match
+### match
 
 `match` is available as a standalone function as well as defined methods for `Result` and `Option`.
 
-#### Usage
+##### Usage
 
 ```typescript
 import {Some, None, Option, Err, Ok, Result, match} from "rust-ts";
@@ -99,11 +100,38 @@ option.match({
 });
 
 const result = option.ok_or("error");
-result.map(x => x + 1);
-result.and_then(x => divide(x, 2));
+result.map(x => x + 1).and_then(x => divide(x, 2));
 match(result, {
     ok: x => console.log(x),
     err: e => console.log(e),
+});
+```
+
+### if_let
+
+`if_let` is available as a standalone function as well as defined methods for `Result` and `Option`.
+
+##### Usage
+
+```typescript
+import {Some, None, Option, Err, Ok, Result, if_let} from "rust-ts";
+
+const add = (x: number, y: number): Option<number> =>
+    y === 0 ? None() : Some(x + y);
+
+const divide = (x: number, y: number): Result<number, string> =>
+    y === 0 ? Err("Cannot divide by zero") : Ok(x + y);
+
+const option = add(3, 4);
+option.if_let({
+    some: x => console.log(x),
+});
+
+const result = option.ok_or("error");
+result.and_then(x => divide(x, 2));
+const foo = if_let(result, {
+    ok: x => x + 1,
+    else: _ => 0,
 });
 ```
 
