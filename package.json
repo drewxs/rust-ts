@@ -21,7 +21,7 @@
     "node": "^18.x.x",
     "npm": "use-pnpm",
     "yarn": "use-pnpm",
-    "pnpm": "^7.x.x"
+    "pnpm": "^8.x.x"
   },
   "scripts": {
     "build": "rimraf dist && tsc",
