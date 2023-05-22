@@ -3,7 +3,7 @@
 [![Build](https://github.com/drewxs/rust-ts/actions/workflows/release.yml/badge.svg)](https://github.com/drewxs/rust-ts/actions/workflows/release.yml)
 [![Docs](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=Docs&logo=vercel&logoColor=white)](https://rust-ts.vercel.app/)
 
-TypeScript implementations of Rust `std` modules like `Result<T, E>` and `Option<T>`.
+TypeScript implementations of Rust `std` modules and some rust-like wrappers.
 
 [Documentation](https://rust-ts.vercel.app/)
 
@@ -15,6 +15,7 @@ TypeScript implementations of Rust `std` modules like `Result<T, E>` and `Option
     -   [Option](#Option)
     -   [match](#match)
     -   [if_let](#if_let)
+    -   [fetchr](#fetchr)
 
 ## Installation
 
@@ -31,7 +32,7 @@ pnpm i rust-ts
 
 ### Result
 
-`Result<T, E>` is the type used for returning and propagating errors. It is an union type with the variants, `Ok<T, E>`, representing success and containing a value, and `Err(E)`, representing error and containing an error value.
+`Result<T, E>` is the type used for returning and propagating errors. It is an union type with the variants, `Ok<T, E>`, representing success and containing a value, and `Err<E>`, representing error and containing an error value.
 
 ```typescript
 type Result<T, E> = Ok<T, E> | Err<T, E>;
@@ -135,15 +136,32 @@ const foo = if_let(result, {
 });
 ```
 
-### Contributing
+### fetchr
 
-1. Fork the repo
-2. Create changes
-3. Update tests
-4. Update docs
-5. Ensure linting and tests pass
-6. Issue PR
-7. ???
-8. Profit
+`fetchr` is a wrapper around `fetch` that returns a `Promise<Result<T, E>>` with the data or error values instead of a `Promise<Response>`.
+
+It also resolves the `json`, `text`, or `blob` accordingly based on the `content-type`.
+
+If you need more granular control, use `fetchx` instead, which returns a `Promise<Result<Response, E>>`.
+
+##### Usage
+
+```typescript
+const url = "https://yourapiurl.com";
+const res = await fetchr(url);
+
+// Fallback data with `unwrap_or`
+const data = res.unwrap_or(0);
+
+// Match to handle each case
+res.match({
+    ok: data => /* do something with data */,
+    err: err => /* handle errors */,
+});
+```
+
+### Contributions
+
+Are welcome!
 
 Refer to the [docs](https://rust-ts.vercel.app/) for more details and examples.
