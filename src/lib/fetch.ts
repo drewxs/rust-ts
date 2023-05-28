@@ -48,12 +48,20 @@ export async function fetchr<T = unknown, E = Error>(
         let data;
         const content_type = response.headers.get("content-type");
 
-        if (content_type && content_type.includes("application/json")) {
+        if (!content_type) {
+            return new Err(new Error("Content-Type header is missing") as E);
+        }
+
+        if (content_type.includes("json")) {
             data = await response.json();
-        } else if (content_type && content_type.includes("text")) {
+        } else if (content_type.includes("text")) {
             data = await response.text();
-        } else {
+        } else if (content_type.includes("form")) {
+            data = await response.formData();
+        } else if (content_type.includes("octet-stream")) {
             data = await response.blob();
+        } else {
+            data = await response.arrayBuffer();
         }
 
         return new Ok(data);
