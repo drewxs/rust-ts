@@ -1,3 +1,11 @@
+## [2.3.2](https://github.com/drewxs/rust-ts/compare/v2.3.1...v2.3.2) (2023-05-28)
+
+
+### Bug Fixes
+
+* **fetch:** add error generics ([67dd729](https://github.com/drewxs/rust-ts/commit/67dd72971f46ef4962f474fd7e6d9a34c1c9d6e0))
+* **fetch:** handle `formData`/`arrayBuffer` content types ([35dde1d](https://github.com/drewxs/rust-ts/commit/35dde1df01786f99b79fe5e103e666ad10a85041))
+
 ## [2.3.1](https://github.com/drewxs/rust-ts/compare/v2.3.0...v2.3.1) (2023-05-28)
 
 
