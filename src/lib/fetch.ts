@@ -32,16 +32,16 @@ import {Result, Err, Ok} from "./result";
  * @param opts - fetch options.
  * @returns A promise containing the fetch `Response` data wrapped in a `Result`.
  */
-export async function fetchr<T = any>(
+export async function fetchr<T = unknown, E = Error>(
     url: RequestInfo | URL,
     opts?: RequestInit,
-): Promise<Result<T, Error>> {
+): Promise<Result<T, E>> {
     try {
         const response = await fetch(url, opts);
 
         if (!response.ok) {
             return new Err(
-                new Error(`Error ${response.status} ${response.statusText}`),
+                new Error(`${response.status} ${response.statusText}`) as E,
             );
         }
 
@@ -58,7 +58,7 @@ export async function fetchr<T = any>(
 
         return new Ok(data);
     } catch (error) {
-        return new Err(error as Error);
+        return new Err(error as E);
     }
 }
 
@@ -85,21 +85,21 @@ export async function fetchr<T = any>(
  * @param opts - fetch options.
  * @returns A promise containing the fetch `Response` wrapped in a `Result`.
  */
-export async function fetchx(
+export async function fetchx<E = Error>(
     url: RequestInfo | URL,
     opts?: RequestInit,
-): Promise<Result<Response, Error>> {
+): Promise<Result<Response, E>> {
     try {
         const response = await fetch(url, opts);
 
         if (!response.ok) {
             return new Err(
-                new Error(`Error ${response.status} ${response.statusText}`),
+                new Error(`${response.status} ${response.statusText}`) as E,
             );
         }
 
         return new Ok(response);
     } catch (error) {
-        return new Err(error as Error);
+        return new Err(error as E);
     }
 }

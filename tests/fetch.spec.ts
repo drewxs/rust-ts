@@ -33,7 +33,7 @@ describe("Fetch", () => {
             const res = await fetchr<Todo>(`${url}/0`);
             res.match({
                 ok: data => expect(data).toBe(0),
-                err: err => expect(err.message).toBe("Error 404 Not Found"),
+                err: err => expect(err.message).toBe("404 Not Found"),
             });
         });
     });
@@ -51,8 +51,7 @@ describe("Fetch", () => {
                         completed: false,
                     });
                 },
-                err: async err =>
-                    expect(err.message).toBe("Error 404 Not Found"),
+                err: async err => expect(err.message).toBe("404 Not Found"),
             });
         });
     });

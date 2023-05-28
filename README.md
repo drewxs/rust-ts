@@ -148,10 +148,10 @@ If you need more granular control, use `fetchx` instead, which returns a `Promis
 
 ```typescript
 const url = "https://yourapiurl.com";
-const res = await fetchr<ExpectedType>(url);
+const res = await fetchr<ExpectedType, CustomErrorType>(url); // Optional generics for expected types, defaults to <unknown, Error>
 
 // Fallback data with `unwrap_or`
-const data = res.unwrap_or(0);
+const data = res.unwrap_or(FALLBACK_DATA);
 
 // Match to handle each case
 res.match({
