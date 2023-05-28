@@ -148,7 +148,7 @@ If you need more granular control, use `fetchx` instead, which returns a `Promis
 
 ```typescript
 const url = "https://yourapiurl.com";
-const res = await fetchr(url);
+const res = await fetchr<ExpectedType>(url);
 
 // Fallback data with `unwrap_or`
 const data = res.unwrap_or(0);

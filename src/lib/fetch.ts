@@ -3,14 +3,39 @@ import {Result, Err, Ok} from "./result";
 /**
  * Fetch wrapper that returns a `Promise<Result<T, E>>` instead of a `Promise<Response>`.
  *
+ * @example
+ * ```ts
+ * const url = "https://jsonplaceholder.typicode.com/todos";
+ * interface Todo {
+ *     userId: number;
+ *     id: number;
+ *     title: string;
+ *     completed: boolean;
+ * }
+ * const res = await fetchr<Todo>(`${url}/1`);
+ *
+ * // Fallback data with `unwrap_or`
+ * const data = res.unwrap_or({
+ *     userId: 0,
+ *     id: 0,
+ *     title: "",
+ *     completed: false,
+ * });
+ *
+ * // Match to handle each case
+ * res.match({
+ *     ok: data => /do something with data/,
+ *     err: err => /handle errors/,
+ * });
+ * ```
  * @param url - fetch url.
  * @param opts - fetch options.
- * @returns A `Promise<Result<T, E>>`.
+ * @returns A promise containing the fetch `Response` data wrapped in a `Result`.
  */
-export async function fetchr(
+export async function fetchr<T = any>(
     url: RequestInfo | URL,
     opts?: RequestInit,
-): Promise<Result<any, unknown>> {
+): Promise<Result<T, Error>> {
     try {
         const response = await fetch(url, opts);
 
@@ -33,21 +58,37 @@ export async function fetchr(
 
         return new Ok(data);
     } catch (error) {
-        return new Err(error);
+        return new Err(error as Error);
     }
 }
 
 /**
  * Fetch wrapper that returns a `Promise<Result<Response, E>>` instead of a `Promise<Response>`.
  *
+ * @example
+ * ```ts
+ * const url = "https://jsonplaceholder.typicode.com/todos";
+ * const result = await fetchx(`${url}/1`);
+ *
+ * res.match({
+ *     ok: async response => {
+ *         // do someting with response
+ *         const data: Todo = await response.json();
+ *         // do someting with data
+ *     },
+ *     err: async error => {
+ *         // handle errors
+ *     },
+ * });
+ * ```
  * @param url - fetch url.
  * @param opts - fetch options.
- * @returns A `Promise<Result<T, E>>`.
+ * @returns A promise containing the fetch `Response` wrapped in a `Result`.
  */
 export async function fetchx(
     url: RequestInfo | URL,
     opts?: RequestInit,
-): Promise<Result<Response, unknown>> {
+): Promise<Result<Response, Error>> {
     try {
         const response = await fetch(url, opts);
 
@@ -59,6 +100,6 @@ export async function fetchx(
 
         return new Ok(response);
     } catch (error) {
-        return new Err(error);
+        return new Err(error as Error);
     }
 }
