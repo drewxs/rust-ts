@@ -1,3 +1,11 @@
+## [2.3.1](https://github.com/drewxs/rust-ts/compare/v2.3.0...v2.3.1) (2023-05-28)
+
+
+### Bug Fixes
+
+* **fetch:** add generics for response data ([b8e5ee2](https://github.com/drewxs/rust-ts/commit/b8e5ee22dfdfa51789f8ade715525bc238caa32d))
+* **lib:** missing fetchx export ([151e529](https://github.com/drewxs/rust-ts/commit/151e529a7b48357119fedb11f9524ca20b129142))
+
 ## [2.3.0](https://github.com/drewxs/rust-ts/compare/v2.2.0...v2.3.0) (2023-05-22)
 
 
