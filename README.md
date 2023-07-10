@@ -111,29 +111,19 @@ match(result, {
 
 ### if_let
 
-`if_let` is available as a standalone function as well as defined methods for `Result` and `Option`.
+`if_let` is available as a standalone function as well as a defined method for `Option`.
 
 ##### Usage
 
 ```typescript
-import {Some, None, Option, Err, Ok, Result, if_let} from "rust-ts";
+import {Some, None, Option, if_let} from "rust-ts";
 
-const add = (x: number, y: number): Option<number> =>
-    y === 0 ? None() : Some(x + y);
+const divide = (x: number, y: number): Option<number> =>
+    y === 0 ? None() : Some(x / y);
 
-const divide = (x: number, y: number): Result<number, string> =>
-    y === 0 ? Err("Cannot divide by zero") : Ok(x + y);
-
-const option = add(3, 4);
+const option = divide(2, 0);
 option.if_let({
-    some: x => console.log(x),
-});
-
-const result = option.ok_or("error");
-result.and_then(x => divide(x, 2));
-const foo = if_let(result, {
-    ok: x => x + 1,
-    else: _ => 0,
+    some: x => console.log("Success"),
 });
 ```
 

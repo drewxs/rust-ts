@@ -7,22 +7,22 @@ import {Err, Ok, Result} from "./result";
  * @typeParam T - The type of the value contained in the `Option`.
  * @typeParam R - The type of the result of the match pattern.
  */
-export type OptionPattern<T, R> = {
+export interface OptionPattern<T, R> {
     /**
      * Function to execute if the `Option` is `Some`.
      *
      * @param v - The wrapped value of type `T`.
      * @returns A value of type `R`.
      */
-    some: (v: T) => R;
+    some(v: T): R;
 
     /**
      * Function to execute if the `Option` is `None`.
      *
      * @returns A value of type `R`.
      */
-    none: () => R;
-};
+    none(): R;
+}
 
 /**
  * if let pattern for `Option` variants.
@@ -30,22 +30,22 @@ export type OptionPattern<T, R> = {
  * @typeParam T - The type of the value contained in the `Option`.
  * @typeParam R - The type of the result of the match pattern.
  */
-export type IfLetOptionPattern<T, R> = {
+export interface IfLetOptionPattern<T, R> {
     /**
      * Function to execute if the `Option` is `Some`.
      *
      * @param v - The wrapped value of type `T`.
      * @returns A value of type `R`.
      */
-    some: (v: T) => R;
+    some(v: T): R;
 
     /**
      * Function to execute if the `Option` is `None`.
      *
      * @returns A value of type `R`.
      */
-    else?: () => R;
-};
+    else?(): R;
+}
 
 /**
  * Represents the outcome of a computation that can either produce
@@ -64,7 +64,7 @@ export interface IOption<T> {
      * ```
      * @returns `true` if the option is `Some`.
      */
-    is_some: () => boolean;
+    is_some(): boolean;
 
     /**
      * Checks if the option is a `None` value.
@@ -76,7 +76,7 @@ export interface IOption<T> {
      * ```
      * @returns `true` if the option is `None`.
      */
-    is_none: () => boolean;
+    is_none(): boolean;
 
     /**
      * Maps an `Option<T>` to `Option<U>` by applying a function to a contained `Some` value, leaving a `None` value untouched.
@@ -351,8 +351,8 @@ export class Some<T> implements IOption<T> {
     constructor(val: T) {
         this.value = val;
     }
-    is_some = (): boolean => true;
-    is_none = (): boolean => false;
+    is_some = () => true;
+    is_none = () => false;
     map<U>(op: (val: T) => U): Option<U> {
         return new Some<U>(op(this.value));
     }
@@ -406,8 +406,8 @@ export class Some<T> implements IOption<T> {
  * @typeParam T - The type of the value contained in the `Option`.
  */
 export class None<T> implements IOption<T> {
-    is_some = (): boolean => false;
-    is_none = (): boolean => true;
+    is_some = () => false;
+    is_none = () => true;
     map<U>(_: (val: T) => U): Option<U> {
         return new None<U>();
     }
