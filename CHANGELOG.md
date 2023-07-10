@@ -1,3 +1,5 @@
+## [2.3.3](https://github.com/drewxs/rust-ts/compare/v2.3.2...v2.3.3) (2023-07-10)
+
 ## [2.3.2](https://github.com/drewxs/rust-ts/compare/v2.3.1...v2.3.2) (2023-05-28)
 
 
