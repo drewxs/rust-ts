@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/drewxs/rust-ts/compare/v2.3.3...v3.0.0) (2023-07-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **if_let:** CHANGE: Result.if_let removed, result matching removed in if_let.
+
+### Features
+
+* **if_let:** rm matching over results ([c984f77](https://github.com/drewxs/rust-ts/commit/c984f77709f886e36a00ae466ab90ccaf0290411))
+
 ## [2.3.3](https://github.com/drewxs/rust-ts/compare/v2.3.2...v2.3.3) (2023-07-10)
 
 ## [2.3.2](https://github.com/drewxs/rust-ts/compare/v2.3.1...v2.3.2) (2023-05-28)
