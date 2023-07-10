@@ -31,6 +31,10 @@
           {
             "type": "style",
             "release": "patch"
+          },
+          {
+            "type": "build",
+            "release": "patch"
           }
         ],
         "parserOpts": {
