@@ -1,5 +1,6 @@
 # rust-ts
 
+[![NPM](https://img.shields.io/npm/v/rust-ts?logo=npm)](https://www.npmjs.com/package/rust-ts)
 [![Build](https://github.com/drewxs/rust-ts/actions/workflows/release.yml/badge.svg)](https://github.com/drewxs/rust-ts/actions/workflows/release.yml)
 [![Docs](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=Docs&logo=vercel&logoColor=white)](https://rust-ts.vercel.app/)
 
