@@ -50,9 +50,7 @@ describe("Result", () => {
             it("should chain Ok values using and", () => {
                 const val1 = Ok(2);
                 const val2 = Err("late error");
-                expect(val1.and(val2).unwrap_err()).toBe(
-                    Err("late error").unwrap_err(),
-                );
+                expect(val1.and(val2).unwrap_err()).toBe(Err("late error").unwrap_err());
             });
         });
         describe("and_then", () => {
@@ -105,12 +103,10 @@ describe("Result", () => {
             it("should throw an error when trying to unwrap an Err", () => {
                 const error = Error("Something went wrong");
                 const result = Err(error);
-                expect(() => result.unwrap()).toThrowError(
-                    "called `unwrap()` on an `Err` value",
+                expect(() => result.unwrap()).toThrowError("called `unwrap()` on an `Err` value");
+                expect(() => result.expect("Custom error message")).toThrowError(
+                    "Custom error message",
                 );
-                expect(() =>
-                    result.expect("Custom error message"),
-                ).toThrowError("Custom error message");
             });
         });
     });

@@ -40,16 +40,14 @@ export async function fetchr<T = unknown, E = Error>(
         const response = await fetch(url, opts);
 
         if (!response.ok) {
-            return new Err(
-                new Error(`${response.status} ${response.statusText}`) as E,
-            );
+            return new Err(Error(`${response.status} ${response.statusText}`) as E);
         }
 
         let data;
         const content_type = response.headers.get("content-type");
 
         if (!content_type) {
-            return new Err(new Error("Content-Type header is missing") as E);
+            return new Err(Error("Content-Type header is missing") as E);
         }
 
         if (content_type.includes("json")) {
@@ -101,9 +99,7 @@ export async function fetchx<E = Error>(
         const response = await fetch(url, opts);
 
         if (!response.ok) {
-            return new Err(
-                new Error(`${response.status} ${response.statusText}`) as E,
-            );
+            return new Err(Error(`${response.status} ${response.statusText}`) as E);
         }
 
         return new Ok(response);

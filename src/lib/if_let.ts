@@ -9,10 +9,7 @@ import {IfLetOptionPattern, Option} from "./option";
  * @param pattern - The pattern to match over.
  * @returns the result of the pattern matchif_let
  */
-export function if_let<T, R>(
-    option: Option<T>,
-    pattern: IfLetOptionPattern<T, R>,
-): R {
+export function if_let<T, R>(option: Option<T>, pattern: IfLetOptionPattern<T, R>): R {
     if (option.is_some()) return pattern.some(option.unwrap());
     if (pattern.else) return pattern.else();
     return undefined as R;

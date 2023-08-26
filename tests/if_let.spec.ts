@@ -1,8 +1,7 @@
 import {Some, None, if_let, Option} from "../src";
 
 describe("Match", () => {
-    const div = (x: number, y: number): Option<number> =>
-        y === 0 ? None() : Some(x / y);
+    const div = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x / y));
 
     describe("standalone", () => {
         it("should match an Ok value to a pattern", () => {

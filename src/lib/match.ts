@@ -11,10 +11,7 @@ import {is_result, Result, ResultPattern} from "./result";
  * @param pattern - The pattern to match over.
  * @returns the result of the pattern match.
  */
-export function match<T, E, R>(
-    input: Result<T, E>,
-    pattern: ResultPattern<T, E, R>,
-): R;
+export function match<T, E, R>(input: Result<T, E>, pattern: ResultPattern<T, E, R>): R;
 
 /**
  * Pattern matches over `Option` variants.

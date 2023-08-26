@@ -69,8 +69,7 @@ type Option<T> = Some<T> | None<T>;
 ```typescript
 import {Some, None, Option, match} from "rust-ts";
 
-const divide = (x: number, y: number): Option<number> =>
-    y === 0 ? None() : Some(x / y);
+const divide = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x / y));
 
 const result = divide(2.0, 3.0);
 
@@ -89,8 +88,7 @@ match(result, {
 ```typescript
 import {Some, None, Option, Err, Ok, Result, match} from "rust-ts";
 
-const add = (x: number, y: number): Option<number> =>
-    y === 0 ? None() : Some(x + y);
+const add = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x + y));
 
 const divide = (x: number, y: number): Result<number, string> =>
     y === 0 ? Err("Cannot divide by zero") : Ok(x + y);
@@ -118,8 +116,7 @@ match(result, {
 ```typescript
 import {Some, None, Option, if_let} from "rust-ts";
 
-const divide = (x: number, y: number): Option<number> =>
-    y === 0 ? None() : Some(x / y);
+const divide = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x / y));
 
 const option = divide(2, 0);
 option.if_let({

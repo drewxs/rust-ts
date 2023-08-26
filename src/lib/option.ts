@@ -436,7 +436,7 @@ export class None<T> implements IOption<T> {
         return op();
     }
     unwrap(): T {
-        throw new Error("called `unwrap()` on a `None` value");
+        throw Error("called `unwrap()` on a `None` value");
     }
     unwrap_or(def: T): T {
         return def;
@@ -448,7 +448,7 @@ export class None<T> implements IOption<T> {
         return new None<T>();
     }
     expect(msg: string): T {
-        throw new Error(msg);
+        throw Error(msg);
     }
     match<R>(pattern: OptionPattern<T, R>): R {
         return pattern.none();
@@ -480,6 +480,5 @@ export type Option<T> = Some<T> | None<T>;
  * @param input - The `Result` or `Option` to check.
  * @returns `true` if `input` is a `Option`, `false` otherwise.
  */
-export const is_option = <T, E>(
-    input: Result<T, E> | Option<T>,
-): input is Option<T> => (input as Option<T>).is_some !== undefined;
+export const is_option = <T, E>(input: Result<T, E> | Option<T>): input is Option<T> =>
+    (input as Option<T>).is_some !== undefined;

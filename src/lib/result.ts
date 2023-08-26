@@ -352,7 +352,7 @@ export class Ok<T, E> implements IResult<T, E> {
         return this.value;
     }
     unwrap_err(): E {
-        throw new Error("Called `unwrap_err()` on an `Ok` value");
+        throw Error("Called `unwrap_err()` on an `Ok` value");
     }
     expect(_: string): T {
         return this.value;
@@ -400,7 +400,7 @@ export class Err<T, E> implements IResult<T, E> {
         return op(this.err);
     }
     unwrap(): T {
-        throw new Error("called `unwrap()` on an `Err` value");
+        throw Error("called `unwrap()` on an `Err` value");
     }
     unwrap_or(def: T): T {
         return def;
@@ -412,7 +412,7 @@ export class Err<T, E> implements IResult<T, E> {
         return this.err;
     }
     expect(msg: string): T {
-        throw new Error(msg);
+        throw Error(msg);
     }
     match<R>(pattern: ResultPattern<T, E, R>): R {
         return pattern.err(this.err);
@@ -435,6 +435,5 @@ export type Result<T, E> = Ok<T, E> | Err<T, E>;
  * @param input - The `Result` or `Option` to check.
  * @returns `true` if `input` is a `Result`, `false` otherwise.
  */
-export const is_result = <T, E>(
-    input: Result<T, E> | Option<T>,
-): input is Result<T, E> => (input as Result<T, E>).is_ok !== undefined;
+export const is_result = <T, E>(input: Result<T, E> | Option<T>): input is Result<T, E> =>
+    (input as Result<T, E>).is_ok !== undefined;
