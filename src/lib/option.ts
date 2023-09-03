@@ -53,7 +53,7 @@ export interface IfLetOptionPattern<T, R> {
  *
  * @typeParam T - The type of the contents of the Option.
  */
-export interface IOption<T> {
+export interface OptionBase<T> {
     /**
      * Checks if the option is a `Some` value.
      *
@@ -346,7 +346,7 @@ export interface IOption<T> {
  *
  * @typeParam T - The type of the wrapped value.
  */
-export class Some<T> implements IOption<T> {
+export class Some<T> implements OptionBase<T> {
     private value: T;
     constructor(val: T) {
         this.value = val;
@@ -405,7 +405,7 @@ export class Some<T> implements IOption<T> {
  *
  * @typeParam T - The type of the value contained in the `Option`.
  */
-export class None<T> implements IOption<T> {
+export class None<T> implements OptionBase<T> {
     is_some = () => false;
     is_none = () => true;
     map<U>(_: (val: T) => U): Option<U> {

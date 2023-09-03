@@ -33,7 +33,7 @@ export interface ResultPattern<T, E, R> {
  * @typeParam T - The type of the value contained in the `Result`.
  * @typeParam E - The type of the value contained in the `Err`.
  */
-export interface IResult<T, E> {
+export interface ResultBase<T, E> {
     /**
      * Checks if the result is an `Ok` value.
      *
@@ -311,7 +311,7 @@ export interface IResult<T, E> {
  * @typeParam T - The type of the value contained in the `Result`.
  * @typeParam E - The type of the value contained in the `Err`.
  */
-export class Ok<T, E> implements IResult<T, E> {
+export class Ok<T, E> implements ResultBase<T, E> {
     private value: T;
     constructor(val: T) {
         this.value = val;
@@ -368,7 +368,7 @@ export class Ok<T, E> implements IResult<T, E> {
  * @typeParam T - The type of the value contained in the `Result`.
  * @typeParam E - The type of the value contained in the `Err`.
  */
-export class Err<T, E> implements IResult<T, E> {
+export class Err<T, E> implements ResultBase<T, E> {
     private err: E;
     constructor(err: E) {
         this.err = err;
