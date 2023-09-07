@@ -1,6 +1,6 @@
 {
   "name": "rust-ts",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Rusty TypeScript",
   "author": "Andrew X. Shah <drewshah0@gmail.com> (https://github.com/drewxs)",
   "keywords": [
