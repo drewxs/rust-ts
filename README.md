@@ -15,7 +15,6 @@ TypeScript implementations of Rust `std` modules and some rust-like wrappers.
     -   [Result](#Result)
     -   [Option](#Option)
     -   [match](#match)
-    -   [if_let](#if_let)
     -   [fetchr](#fetchr)
 
 ## Installation
@@ -104,23 +103,6 @@ result.map(x => x + 1).and_then(x => divide(x, 2));
 match(result, {
     ok: x => console.log(x),
     err: e => console.log(e),
-});
-```
-
-### if_let
-
-`if_let` is available as a standalone function as well as a defined method for `Option`.
-
-##### Usage
-
-```typescript
-import {Some, None, Option, if_let} from "rust-ts";
-
-const divide = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x / y));
-
-const option = divide(2, 0);
-option.if_let({
-    some: x => console.log("Success"),
 });
 ```
 
