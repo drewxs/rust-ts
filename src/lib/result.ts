@@ -74,40 +74,24 @@ export interface ResultBase<T, E> {
     map<U>(op: (val: T) => U): Result<U, E>;
 
     /**
-     * Returns the provided default value (if `Err`), or applies to the contained value (if `Ok`).
-     * Arguments passed to `map_or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `map_or_else`, which is lazily evaluated.
-     *
-     * @example
-     * ```ts
-     * let x = Ok('foo');
-     * x.map_or(42, (v) => v.length); // 3
-     *
-     * let x: Result<string, unknown> = Err("bar");
-     * x.map_or(42, (v) => v.length); // 42
-     * ```
-     * @typeParam U - The type to map the `Ok` value to.
-     * @param def - The default value to return if `Err`.
-     * @param op - The function to apply to the contained `Ok` value.
-     * @returns The result of applying `op` to the contained `Ok` value, or the provided default value if it was an `Err`.
-     */
-    map_or<U>(def: U, op: (val: T) => U): U;
-
-    /**
-     * Maps a `Result<T, E>` to `U` by applying fallback function `default` to a contained `Err` value, or function `op` to a contained `Ok` value.
+     * Returns the provided default value or computes it through the provided callback (if `Err`),
+     * or applies a function to the contained value (if `Ok`).
      * This function can be used to unpack a successful result while handling an error.
      *
      * @example
      * ```ts
-     * let k = 21;
      * let x = Ok('foo');
-     * x.map_or_else(() => k * 2, v => v.length); // 3
+     * x.map_or(42, v => v.length); // 3
+     *
+     * let y: Result<string, unknown> = Err("bar");
+     * y.map_or(() => 42, v => v.length); // 42
      * ```
      * @typeParam U - The type to map the `Ok` value to.
-     * @param def - The default function to call if `Err`.
+     * @param x - The default value to return or function to call if `Err`.
      * @param op - The function to apply to the contained `Ok` value.
-     * @returns The result of applying `op` to the contained `Ok` value, or the result of calling `default` if it was an `Err`.
+     * @returns The result of applying `op` to the contained `Ok` value, or the provided default value if it was an `Err`.
      */
-    map_or_else<U>(def: () => U, op: (val: T) => U): U;
+    map_or<U>(x: U | (() => U), op: (val: T) => U): U;
 
     /**
      * Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value, leaving an `Ok` value untouched.
@@ -127,42 +111,29 @@ export interface ResultBase<T, E> {
     map_err<F>(op: (err: E) => Result<T, F>): Result<T, F>;
 
     /**
-     * Returns `res` if the result is `Ok`, otherwise returns the `Err` value.
-     * Arguments passed to `and` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `and_then`, which is lazily evaluated.
+     * Returns the provided Result or computes it from the callback if the result is `Ok`, otherwise returns the `Err` value.
      *
      * @example
      * ```ts
      * let x = Ok(2);
      * let y = Err('late error');
      * x.and(y); // Err('late error')
-     * ```
-     * @typeParam U - Success type of the result to return if `Ok`.
-     * @param res - The result to return if `Ok`.
-     * @returns `res` if the result is `Ok`, otherwise returns the `Err` value.
-     */
-    and<U>(res: Result<U, E>): Result<U, E>;
-
-    /**
-     * Calls `op` if the result is `Ok`, otherwise returns the `Err` value.
-     * This function can be used for control flow based on `Result` values.
      *
-     * @example
-     * ```ts
      * const parse_num = (s: string) => Number.isNan(Number(s)) ? Err('NaN') : Ok(Number(s));
      *
-     * Ok('2').and_then(parse_num); // Ok(2)
-     * Ok('foo').and_then(parse_num); // Err('NaN')
-     * Err('fail').and_then(parse_num); // Err('fail')
+     * Ok('2').and(parse_num); // Ok(2)
+     * Ok('foo').and(parse_num); // Err('NaN')
+     * Err('fail').and(parse_num); // Err('fail')
      * ```
      * @typeParam U - Success type of the result to return if `Ok`.
-     * @param op - The function to call if `Ok`.
-     * @returns The result of calling `op` if the result is `Ok`, otherwise returns the `Err` value.
+     * @param x - The result to return if `Ok`.
+     * @returns `x` or the result of `x()` if the result is `Ok`, otherwise returns the `Err` value.
      */
-    and_then<U>(op: (val: T) => Result<U, E>): Result<U, E>;
+    and<U>(x: Result<U, E> | ((val: T) => Result<U, E>)): Result<U, E>;
 
     /**
-     * Returns `res` if the result is `Err`, otherwise returns the `Ok` value.
-     * Arguments passed to `or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `or_else`, which is lazily evaluated.
+     * Returns the provided result or executes the provided callback if the result is `Err`,
+     * otherwise returns the `Ok` value.
      *
      * @example
      * ```ts
@@ -181,34 +152,25 @@ export interface ResultBase<T, E> {
      * let x = Ok(2);
      * let y = Ok(100);
      * x.or(y); // Ok(2)
-     * ```
-     * @param res - The result to return if `Err`.
-     * @returns `res` if `Err`, otherwise `Ok` value.
-     */
-    or(res: Result<T, E>): Result<T, E>;
-
-    /**
-     * Calls `op` if the result is `Err`, otherwise returns the `Ok` value.
      *
-     * @example
-     * ```ts
      * const sq = (x: number) => Ok(x * x);
      * const err = (x: number) => Err(x);
      *
-     * Ok(2).or_else(sq).or_else(sq); // Ok(2)
-     * Ok(2).or_else(err).or_else(sq); // Ok(2)
-     * Ok(3).or_else(sq).or_else(err); // Ok(9)
-     * Ok(3).or_else(err).or_else(err); // Ok(3)
+     * Ok(2).or(sq).or(sq); // Ok(2)
+     * Ok(2).or(err).or(sq); // Ok(2)
+     * Ok(3).or(sq).or(err); // Ok(9)
+     * Ok(3).or(err).or(err); // Ok(3)
      * ```
-     * @typeParam F - Error type of the result to return if `Err`.
-     * @param op - The function to call if `Err`.
-     * @returns The result of calling `op` if the result is `Err`, otherwise returns the `Ok` value.
+     * @typeParam U - Success type of the result to return if `Err`.
+     * @typeParam F - Failure type of the result to return if `Err`.
+     * @param x - The result to return or callback to execute if `Err`.
+     * @returns `x` or the result of executing `x` if `Err`, otherwise returns the `Ok` value.
      */
-    or_else<F>(op: (err: E) => Result<T, F>): Result<T, F>;
+    or<U, F>(x: Result<U, F> | ((err: E) => Result<U, F>)): Result<T | U, F>;
 
     /**
      * Returns the contained `Ok` value.
-     * Because this function may throw an exception, its use is generally discouraged. Instead, prefer to call `unwrap_or`, `unwrap_or_else`
+     * Because this function may throw an exception, its use is generally discouraged. Instead, prefer to call `unwrap_or`.
      *
      * @example
      * ```ts
@@ -224,36 +186,20 @@ export interface ResultBase<T, E> {
     unwrap(): T;
 
     /**
-     * Returns the contained `Ok` value or a provided default.
-     * Arguments passed to `unwrap_or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `unwrap_or_else`, which is lazily evaluated.
+     * Returns the contained `Ok` value, or a provided default value or closure that computes a value.
      *
      * @example
      * ```ts
      * let x = Ok(42);
      * x.unwrap_or(7); // 42
      *
-     * let y = Err('error');
-     * y.unwrap_or(7); // 7
+     * let y = Err('foo');
+     * y.unwrap_or(e => e.length); // 3
      * ```
      * @param def - The default value to return if `Err`.
      * @returns The contained `Ok` value or the provided default value if `Err`.
      */
-    unwrap_or(def: T): T;
-
-    /**
-     * Returns the contained `Ok` value or computes it from a closure.
-     *
-     * @example
-     * ```ts
-     * const count = (x: string): number => x.length;
-     *
-     * let x = Ok(2).unwrap_or_else(count); // 2
-     * let y = Err('foo').unwrap_or_else(count); // 3
-     * ```
-     * @param op - The closure to compute a default value if `Err`.
-     * @returns The contained `Ok` value or the result of the closure if `Err`.
-     */
-    unwrap_or_else(op: (err: E) => T): T;
+    unwrap_or(x: T | ((err: E) => T)): T;
 
     /**
      * Returns the contained `Err` value.
@@ -318,37 +264,25 @@ export class Ok<T, E> implements ResultBase<T, E> {
     }
     is_ok = () => true;
     is_err = () => false;
-    map<U>(op: (val: T) => U): Result<U, E> {
+    map<U>(op: (v: T) => U): Result<U, E> {
         return new Ok<U, E>(op(this.value));
     }
-    map_or<U>(_: U, op: (val: T) => U): U {
-        return op(this.value);
-    }
-    map_or_else<U>(_: () => U, op: (val: T) => U): U {
+    map_or<U>(_: U | (() => U), op: (v: T) => U): U {
         return op(this.value);
     }
     map_err<F>(_: (err: E) => Result<T, F>): Result<T, F> {
         return new Ok<T, F>(this.value);
     }
-    and<U>(res: Result<U, E>): Result<U, E> {
-        return res;
+    and<U>(x: Result<U, E> | ((val: T) => Result<U, E>)): Result<U, E> {
+        return x instanceof Function ? x(this.value) : x;
     }
-    and_then<U>(op: (val: T) => Result<U, E>): Result<U, E> {
-        return op(this.value);
-    }
-    or<U>(_: Result<U, E>): Result<T | U, E> {
-        return new Ok<T | U, E>(this.value);
-    }
-    or_else<F>(_: (err: E) => Result<T, F>): Result<T, F> {
-        return new Ok<T, F>(this.value);
+    or<U, F>(_: Result<U, F> | ((err: E) => Result<U, F>)): Result<T, F> {
+        return new Ok(this.value);
     }
     unwrap(): T {
         return this.value;
     }
-    unwrap_or(_: T) {
-        return this.value;
-    }
-    unwrap_or_else(_: (_: E) => T): T {
+    unwrap_or(_: T | ((_: E) => T)): T {
         return this.value;
     }
     unwrap_err(): E {
@@ -378,35 +312,23 @@ export class Err<T, E> implements ResultBase<T, E> {
     map<U>(_: (val: T) => U): Result<U, E> {
         return new Err<U, E>(this.err);
     }
-    map_or<U>(def: U, _: (val: T) => U): U {
-        return def;
-    }
-    map_or_else<U>(def: () => U, _: (val: T) => U): U {
-        return def();
+    map_or<U>(x: U | (() => U), _: (val: T) => U): U {
+        return x instanceof Function ? x() : x;
     }
     map_err<F>(op: (err: E) => Result<T, F>): Result<T, F> {
         return op(this.err);
     }
-    and<U>(_: Result<U, E>): Result<U, E> {
+    and<U>(_: Result<U, E> | ((val: T) => Result<U, E>)): Result<U, E> {
         return new Err<U, E>(this.err);
     }
-    and_then<U>(_: (val: T) => Result<U, E>): Result<U, E> {
-        return new Err<U, E>(this.err);
-    }
-    or<U>(res: Result<U, E>): Result<T | U, E> {
-        return res;
-    }
-    or_else<F>(op: (err: E) => Result<T, F>): Result<T, F> {
-        return op(this.err);
+    or<U, F>(x: Result<U, F> | ((err: E) => Result<U, F>)): Result<U, F> {
+        return x instanceof Function ? x(this.err) : x;
     }
     unwrap(): T {
         throw Error("called `unwrap()` on an `Err` value");
     }
-    unwrap_or(def: T): T {
-        return def;
-    }
-    unwrap_or_else(op: (err: E) => T): T {
-        return op(this.err);
+    unwrap_or(x: T | ((err: E) => T)): T {
+        return x instanceof Function ? x(this.err) : x;
     }
     unwrap_err(): E {
         return this.err;

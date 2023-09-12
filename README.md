@@ -30,24 +30,38 @@ pnpm i rust-ts
 
 ## Modules
 
+Note: All `_then`/`_else` callback variants have been combined with their value counterparts.
+For example, if you wanted to do:
+
+```ts
+Some(42).unwrap_or_else(() => 5);
+```
+
+You can simply do:
+
+```ts
+Some(42).unwrap_or(() => 5);
+Some(42).unwrap_or(5);
+```
+
 ### Result
 
 `Result<T, E>` is the type used for returning and propagating errors. It is an union type with the variants, `Ok<T, E>`, representing success and containing a value, and `Err<E>`, representing error and containing an error value.
 
-```typescript
+```ts
 type Result<T, E> = Ok<T, E> | Err<T, E>;
 ```
 
 ##### Usage
 
-```typescript
+```ts
 import {Ok, Err, Result} from "rust-ts";
 
 const divide = (x: number, y: number): Result<number, string> =>
     y === 0 ? Err("Can't divide by zero") : Ok(x / y);
 
 divide(10, 5)
-    .and_then(z => divide(z, 2))
+    .and(z => divide(z, 2))
     .map(z => [z, z + 1])
     .match({
         ok: ([v, x]) => console.log(v + x),
@@ -59,13 +73,13 @@ divide(10, 5)
 
 `Option<T>` represents an optional value: every `Option` is either `Some` and contains a value, or `None`, and does not.
 
-```typescript
+```ts
 type Option<T> = Some<T> | None<T>;
 ```
 
 ##### Usage
 
-```typescript
+```ts
 import {Some, None, Option, match} from "rust-ts";
 
 const divide = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x / y));
@@ -84,7 +98,7 @@ match(result, {
 
 ##### Usage
 
-```typescript
+```ts
 import {Some, None, Option, Err, Ok, Result, match} from "rust-ts";
 
 const add = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x + y));
@@ -99,7 +113,7 @@ option.match({
 });
 
 const result = option.ok_or("error");
-result.map(x => x + 1).and_then(x => divide(x, 2));
+result.map(x => x + 1).and(x => divide(x, 2));
 match(result, {
     ok: x => console.log(x),
     err: e => console.log(e),
@@ -116,7 +130,7 @@ If you need more granular control, use `fetchx` instead, which returns a `Promis
 
 ##### Usage
 
-```typescript
+```ts
 const url = "https://yourapiurl.com";
 const res = await fetchr<ExpectedType, CustomErrorType>(url); // Optional generics for expected types, defaults to <unknown, Error>
 

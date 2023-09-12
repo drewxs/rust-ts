@@ -25,8 +25,7 @@ export interface OptionPattern<T, R> {
 }
 
 /**
- * Represents the outcome of a computation that can either produce
- * a value of type `T` or not produce a value.
+ * Represents the outcome of a computation that can either produce a value of type `T` or not produce a value.
  *
  * @typeParam T - The type of the contents of the Option.
  */
@@ -57,12 +56,12 @@ export interface OptionBase<T> {
 
     /**
      * Maps an `Option<T>` to `Option<U>` by applying a function to a contained `Some` value, leaving a `None` value untouched.
-     * This is associative: `foo.map(f).map(g)` is the same as `foo.map((x) => g(f(x)))`.
+     * This is associative: `foo.map(f).map(g)` is the same as `foo.map(x => g(f(x)))`.
      *
      * @example
      * ```ts
-     * let x = Some(2)
-     * x.map(x => x + 3); // Some(5)
+     * let x = Some(2);
+     * x.map(x => x + 3); // Some(5);
      * ```
      * @typeParam U - The type to map the `Some` value to.
      * @param op - The function to apply to the contained `Some` value.
@@ -72,72 +71,49 @@ export interface OptionBase<T> {
 
     /**
      * Returns the provided default value (if `None`), or applies to the contained value (if `Some`).
-     * Arguments passed to `map_or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `map_or_else`, which is lazily evaluated.
      *
      * @example
      * ```ts
      * let x = Some('foo');
-     * x.map_or(42, (v) => v.length); // 3
+     * x.map_or(42, v => v.length); // 3
      *
      * let x: Option<string> = None();
-     * x.map_or(42, (v) => v.length); // 42
-     * ```
-     * @typeParam U - The type to map the `Some` value to.
-     * @param def - The default value to return if `None`.
-     * @param op - The function to apply to the contained `Some` value.
-     * @returns The result of applying `op` to the contained `Some` value, or the provided default value if it was an `None`.
-     */
-    map_or<U>(def: U, op: (val: T) => U): U;
-
-    /**
-     * Computes a default function result (if `None`), or applies a different function to the contained value (if `Some`).
-     * This function can be used to unpack a wrapped result while handling `None` with an expensive fallback.
+     * x.map_or(42, v => v.length); // 42
      *
-     * @example
-     * ```ts
-     * let k = 21;
      * let x = Some('foo');
-     * x.map_or_else(() => k * 2, v => v.length); // 3
+     * x.map_or(() => 42, v => v.length); // 3
      * ```
      * @typeParam U - The type to map the `Some` value to.
-     * @param def - The default function to call if `None`.
+     * @param x - The default value to return or callback to compute one from if `None`.
      * @param op - The function to apply to the contained `Some` value.
-     * @returns The result of applying `op` to the contained `Some` value, or the result of calling `default` if it was an `None`.
+     * @returns The result of applying `op` to the contained `Some` value,
+     * or the provided default value or callback result if it was an `None`.
      */
-    map_or_else<U>(def: () => U, op: (val: T) => U): U;
+    map_or<U>(x: U | (() => U), op: (val: T) => U): U;
 
     /**
      * Transforms the `Option<T>` into a `Result<T, E>`, mapping `Some(v)` to `Ok(v)` and `None` to `Err(err)`.
-     * Arguments passed to ok_or are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `ok_or_else`, which is lazily evaluated.
      *
      * @example
      * ```ts
      * let x = Some(26);
      * x.ok_or("error!"); // Ok(26)
+     *
+     * let y = None();
+     * x.ok_or(() => "error!"); // Err("error!")
      * ```
      * @typeParam E - The type of the provided error.
-     * @param err - The error to return if `None`.
+     * @param err - The error to return or compute if `None`.
      * @returns `Ok(v)` if the result is `Some(v)`, otherwise returns `Err(err)`.
      */
-    ok_or<E>(err: E): Result<T, E>;
+    ok_or<E>(err: E | (() => E)): Result<T, E>;
 
     /**
-     * Transforms the `Option<T>` into a `Result<T, E>`, mapping `Some(v)` to `Ok(v)` and `None` to `Err(err())`.
-     *
-     * @example
-     * ```ts
-     * letx = None();
-     * x.ok_or_else(() => "error!"); // Err("error!")
-     * ```
-     * @typeParam E - The type of the provided error.
-     * @param err - The error to return if `None` (lazy).
-     * @returns `Ok(v)` if the result is `Some(v)`, otherwise returns `Err(err())`.
-     */
-    ok_or_else<E>(err: () => E): Result<T, E>;
-
-    /**
-     * Returns `res` if the option is `Some`, otherwise returns the `None` value.
-     * Arguments passed to `and` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `and_then`, which is lazily evaluated.
+     * Returns `x` or the result of executing `x` if the option is `Some`, otherwise returns the `None` value.
+     * This function can be used for control flow based on `Option` values.
+     * This is a monadic bind operation:
+     *     `x.and(v => v)` is equivalent to `x`.
+     *     `x.and(f).and(g)` is equivalent to `x.and(x => f(x).and(g))`.
      *
      * @example
      * ```ts
@@ -146,35 +122,13 @@ export interface OptionBase<T> {
      * x.and(y); // None()
      * ```
      * @typeParam U - Success type of the option to return if `Some`.
-     * @param res - The result to return if `Some`.
-     * @returns `res` if the result is `Some`, otherwise `None`.
+     * @param x - The result to return or compute if `Some`.
+     * @returns `x` or the result of `x()` if the result is `Some`, otherwise `None`.
      */
-    and<U>(res: Option<U>): Option<U>;
+    and<U>(x: Option<U> | ((val: T) => Option<U>)): Option<U>;
 
     /**
-     * Calls `op` if the option is `Some`, otherwise returns the `None` value.
-     * This function can be used for control flow based on `Option` values.
-     * This is a monadic bind operation:
-     *     `x.and_then((v) => v)` is equivalent to `x`.
-     *     `x.and_then(f).and_then(g)` is equivalent to `x.and_then(x => f(x).and_then(g))`.
-     *
-     * @example
-     * ```ts
-     * const parse_num = (s: string) => Number.isNan(Number(s)) ? None<number>() : Some(Number(s));
-     *
-     * Some('2').and_then(parse_num); // Some(2)
-     * Some('foo').and_then(parse_num); // None()
-     * None<string>().and_then(parse_num); // None()
-     * ```
-     * @typeParam U - Success type of the option to return if `Some`.
-     * @param op - The function to call if `Some`.
-     * @returns The result of calling `op` if the option is `Some`, otherwise returns the `None` value.
-     */
-    and_then<U>(op: (val: T) => Option<U>): Option<U>;
-
-    /**
-     * Returns `res` if the option is `None`, otherwise returns the `Some` value.
-     * Arguments passed to `or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `or_else`, which is lazily evaluated.
+     * Returns the option if it contains a value, otherwise returns the provided option or computes it from a closure.
      *
      * @example
      * ```ts
@@ -193,35 +147,25 @@ export interface OptionBase<T> {
      * let x = Some(2);
      * let y = Some(100);
      * x.or(y); // Some(2)
-     * ```
-     * @param res - The result to return if `None`.
-     * @returns `res` if `None`, otherwise `Some` value.
-     */
-    or(res: Option<T>): Option<T>;
-
-    /**
-     * Returns the option if it contains a value, otherwise calls `f` and returns the result.
      *
-     * @example
-     * ```ts
      * const sq = (x: number) => x * x;
      * const err = (x: number) => None(x);
      *
      * let nobody = () => None();
      * let vikings = () => Some("vikings");
      *
-     * Some("barbarians").or_else(vikings); // Some("barbarians")
-     * None().or_else(vikings); // Some("vikings")
-     * None().or_else(nobody); // None()
+     * Some("barbarians").or(vikings); // Some("barbarians")
+     * None().or(vikings); // Some("vikings")
+     * None().or(nobody); // None()
      * ```
-     * @param op - The function to call if `None`.
-     * @returns The result of calling `op` if the result is `None`, otherwise returns the `Some` value.
+     * @param x - The result to return or compute if `None`.
+     * @returns `x` or the result of `x()` if `None`, otherwise `Some` value.
      */
-    or_else(op: () => Option<T>): Option<T>;
+    or(x: Option<T> | (() => Option<T>)): Option<T>;
 
     /**
      * Returns the contained `Some` value.
-     * Because this function may throw an exception, its use is generally discouraged. Instead, prefer to call `unwrap_or`, or `unwrap_or_else`.
+     * Because this function may throw an exception, its use is generally discouraged. Instead, prefer to call `unwrap_or`.
      *
      * @example
      * ```ts
@@ -237,8 +181,7 @@ export interface OptionBase<T> {
     unwrap(): T;
 
     /**
-     * Returns the contained `Some` value or a provided default.
-     * Arguments passed to `unwrap_or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `unwrap_or_else`, which is lazily evaluated.
+     * Returns the contained `Some` value or returns the provided value or computes it from a closure.
      *
      * @example
      * ```ts
@@ -247,25 +190,15 @@ export interface OptionBase<T> {
      *
      * let y = None();
      * y.unwrap_or(7); // 7
+     *
+     * const k = 10;
+     * Some(4).unwrap_or(() => 2 * k); // 4
+     * None().unwrap_or(() => 2 * k); // 20
      * ```
-     * @param def - The default value to return if `None`.
+     * @param x - The default value to return or closure to compute if `None`.
      * @returns The contained `Some` value or the provided default value if `None`.
      */
-    unwrap_or(def: T): T;
-
-    /**
-     * Returns the contained `Some` value or computes it from a closure.
-     *
-     * @example
-     * ```ts
-     * const k = 10;
-     * Some(4).unwrap_or_else(|| 2 * k); // 4
-     * None().unwrap_or_else(|| 2 * k); // 20
-     * ```
-     * @param op - The closure to compute a default value if `None`.
-     * @returns The contained `Some` value or the result of the closure if `None`.
-     */
-    unwrap_or_else(op: () => T): T;
+    unwrap_or(x: T | (() => T)): T;
 
     /**
      * Returns the contained `Some` value if it exists, otherwise throws an Error with the provided message.
@@ -288,8 +221,8 @@ export interface OptionBase<T> {
      * ```ts
      * let x = Some(42);
      * let y = x.match({
-     *  some: (val) => val.toString(),
-     *  none: () => 'Unexpected error'
+     *     some: v => v.toString(),
+     *     none: () => 'Unexpected error'
      * }); // '42'
      * ```
      * @typeParam T - The type of the value contained in the `Option`.
@@ -315,37 +248,22 @@ export class Some<T> implements OptionBase<T> {
     map<U>(op: (val: T) => U): Option<U> {
         return new Some<U>(op(this.value));
     }
-    map_or<U>(_: U, op: (val: T) => U): U {
+    map_or<U>(_: U | (() => U), op: (val: T) => U): U {
         return op(this.value);
     }
-    map_or_else<U>(_: () => U, op: (val: T) => U): U {
-        return op(this.value);
-    }
-    ok_or<E>(_: E): Result<T, E> {
+    ok_or<E>(_: E | (() => E)): Result<T, E> {
         return new Ok<T, E>(this.value);
     }
-    ok_or_else<E>(_: () => E): Result<T, E> {
-        return new Ok<T, E>(this.value);
+    and<U>(x: Option<U> | ((val: T) => Option<U>)): Option<U> {
+        return x instanceof Function ? x(this.value) : x;
     }
-    and<U>(res: Option<U>): Option<U> {
-        return res;
-    }
-    and_then<U>(op: (val: T) => Option<U>): Option<U> {
-        return op(this.value);
-    }
-    or(_: Option<T>): Option<T> {
-        return new Some<T>(this.value);
-    }
-    or_else(_: () => Option<T>): Option<T> {
+    or(_: Option<T> | (() => Option<T>)): Option<T> {
         return new Some<T>(this.value);
     }
     unwrap(): T {
         return this.value;
     }
-    unwrap_or(_: T) {
-        return this.value;
-    }
-    unwrap_or_else(_: () => T): T {
+    unwrap_or(_: T | (() => T)) {
         return this.value;
     }
     expect(_: string): T {
@@ -367,41 +285,23 @@ export class None<T> implements OptionBase<T> {
     map<U>(_: (val: T) => U): Option<U> {
         return new None<U>();
     }
-    map_or<U>(def: U, _: (val: T) => U): U {
-        return def;
+    map_or<U>(x: U | (() => U), _: (val: T) => U): U {
+        return x instanceof Function ? x() : x;
     }
-    map_or_else<U>(def: () => U, _: (val: T) => U): U {
-        return def();
+    ok_or<E>(x: E | (() => E)): Result<T, E> {
+        return new Err<T, E>(x instanceof Function ? x() : x);
     }
-    ok_or<E>(err: E): Result<T, E> {
-        return new Err<T, E>(err);
-    }
-    ok_or_else<E>(op: () => E): Result<T, E> {
-        return new Err<T, E>(op());
-    }
-    and<U>(_: Option<U>): Option<U> {
+    and<U>(_: Option<U> | ((val: T) => Option<U>)): Option<U> {
         return new None<U>();
     }
-    and_then<U>(_: (val: T) => Option<U>): Option<U> {
-        return new None<U>();
-    }
-    or(res: Option<T>): Option<T> {
-        return res;
-    }
-    or_else(op: () => Option<T>): Option<T> {
-        return op();
+    or(res: Option<T> | (() => Option<T>)): Option<T> {
+        return res instanceof Function ? res() : res;
     }
     unwrap(): T {
         throw Error("called `unwrap()` on a `None` value");
     }
-    unwrap_or(def: T): T {
-        return def;
-    }
-    unwrap_or_else(op: () => T): T {
-        return op();
-    }
-    cloned(): Option<T> {
-        return new None<T>();
+    unwrap_or(x: T | (() => T)): T {
+        return x instanceof Function ? x() : x;
     }
     expect(msg: string): T {
         throw Error(msg);
@@ -418,12 +318,6 @@ export class None<T> implements OptionBase<T> {
  */
 export type Option<T> = Some<T> | None<T>;
 
-/**
- * `Option` type guard.
- *
- * @typeParam input - The value to check.
- * @returns `true` if `input` is an `Option`, `false` otherwise.
- */
 /**
  * `Option` type guard.
  *
