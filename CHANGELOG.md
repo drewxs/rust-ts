@@ -1,3 +1,16 @@
+## [4.0.0](https://github.com/drewxs/rust-ts/compare/v3.0.2...v4.0.0) (2023-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* CHANGE: `_then`/`_else` methods removed, functionality combined with their value variants (e.g. and_then->and).
+* CHANGE: if_let removed, prefer to use match or `x.and_then(v => /** do something with v */)` instead.
+
+### Features
+
+* combine _then/_else methods ([c0c8a79](https://github.com/drewxs/rust-ts/commit/c0c8a79a55fc309e3192100f390a6721c5df1db5))
+* rm if_let ([be97874](https://github.com/drewxs/rust-ts/commit/be97874ecf4ee4d6618ed36785dfeb9483c770e6))
+
 ## [3.0.2](https://github.com/drewxs/rust-ts/compare/v3.0.1...v3.0.2) (2023-09-07)
 
 ## [3.0.1](https://github.com/drewxs/rust-ts/compare/v3.0.0...v3.0.1) (2023-08-26)
