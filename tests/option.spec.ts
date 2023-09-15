@@ -104,4 +104,14 @@ describe("Option", () => {
             expect(res).toBe("Enexpected error");
         });
     });
+    describe("some", () => {
+        it("should execute a callback with the contained value if the value is Some", () => {
+            const val = Some(42);
+            val.some(x => {
+                expect(x).toBe(42);
+                const y = x * 10;
+                expect(y).toBe(420);
+            });
+        });
+    });
 });

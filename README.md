@@ -2,20 +2,21 @@
 
 [![NPM](https://img.shields.io/npm/v/rust-ts?logo=npm)](https://www.npmjs.com/package/rust-ts)
 [![Build](https://github.com/drewxs/rust-ts/actions/workflows/release.yml/badge.svg)](https://github.com/drewxs/rust-ts/actions/workflows/release.yml)
-[![Docs](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=Docs&logo=vercel&logoColor=white)](https://rust-ts.vercel.app/)
+[![Docs](https://img.shields.io/github/deployments/drewxs/rust-ts/production?label=Docs&logo=vercel&logoColor=white)](https://rust-ts.vercel.app)
 
 TypeScript implementations of Rust `std` modules and some rust-like wrappers.
 
-[Documentation](https://rust-ts.vercel.app/)
+[Documentation](https://rust-ts.vercel.app)
 
 ## Contents
 
--   [Installation](#Installation)
--   [Modules](#Modules)
+-   [Installation](#installation)
+-   [Key differences](#key-differences)
+-   [Modules](#modules)
     -   [Result](#Result)
     -   [Option](#Option)
     -   [match](#match)
-    -   [fetchr](#fetchr)
+    -   [fetch](#fetch)
 
 ## Installation
 
@@ -28,9 +29,9 @@ yarn add rust-ts
 pnpm i rust-ts
 ```
 
-## Modules
+## Key differences
 
-Note: All `_then`/`_else` callback variants have been combined with their value counterparts.
+All `_then`/`_else` callback variants have been combined with their value counterparts.
 For example, if you wanted to do:
 
 ```ts
@@ -43,6 +44,42 @@ You can simply do:
 Some(42).unwrap_or(() => 5);
 Some(42).unwrap_or(5);
 ```
+
+`match` and `if let` implementations are also a bit different.
+
+Rust:
+
+```rs
+let num = Some(42);
+if let Some(x) {...}
+
+let res = Ok(10);
+match res {
+    Ok(x) => {...},
+    Err(e) => {...}
+}
+```
+
+`rust-ts` equivalent:
+
+```ts
+let num = Some(42);
+num.some(x => {...});
+
+let res = Ok(10);
+match(res, {
+    ok: x => {...},
+    err: e => {...},
+});
+
+// Alternatively
+res.match({
+    ok: x => {...},
+    err: e => {...},
+})
+```
+
+## Modules
 
 ### Result
 
@@ -120,7 +157,7 @@ match(result, {
 });
 ```
 
-### fetchr
+### fetch
 
 `fetchr` is a wrapper around `fetch` that returns a `Promise<Result<T, E>>` with the data or error values instead of a `Promise<Response>`.
 
@@ -148,4 +185,4 @@ res.match({
 
 Are welcome!
 
-Refer to the [docs](https://rust-ts.vercel.app/) for more details and examples.
+Refer to the [docs](https://rust-ts.vercel.app) for more details and examples.

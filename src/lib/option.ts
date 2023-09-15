@@ -231,6 +231,21 @@ export interface OptionBase<T> {
      * @returns The result of the pattern match.
      */
     match<R>(pattern: OptionPattern<T, R>): R;
+
+    /**
+     * Applies a function to the contained value (if `Some`).
+     * This function can be used similarly to using `if let Some(x)` in rust.
+     *
+     * @example
+     * ```ts
+     * let x = Some(2);
+     * x.some(x => x + 3); // 5
+     * ```
+     * @typeParam R - The type of the result of the function.
+     * @param f - The function to apply to the contained value.
+     * @returns The result of applying `f` to the contained value, or returns self if it was a `None`.
+     */
+    some<U>(f: (x: T) => U): U | None<T>;
 }
 
 /**
@@ -272,6 +287,9 @@ export class Some<T> implements OptionBase<T> {
     match<R>(pattern: OptionPattern<T, R>): R {
         return pattern.some(this.value);
     }
+    some<U>(f: (x: T) => U): U {
+        return f(this.value);
+    }
 }
 
 /**
@@ -308,6 +326,9 @@ export class None<T> implements OptionBase<T> {
     }
     match<R>(pattern: OptionPattern<T, R>): R {
         return pattern.none();
+    }
+    some<U>(_: (x: T) => U): None<T> {
+        return this;
     }
 }
 
