@@ -1,3 +1,10 @@
+## [4.1.0](https://github.com/drewxs/rust-ts/compare/v4.0.0...v4.1.0) (2023-09-15)
+
+
+### Features
+
+* **option:** create method `some` ([61ed5ec](https://github.com/drewxs/rust-ts/commit/61ed5ec0357fc531c34de3a9ff2e5f853ac22aeb))
+
 ## [4.0.0](https://github.com/drewxs/rust-ts/compare/v3.0.2...v4.0.0) (2023-09-12)
 
 
