@@ -33,7 +33,7 @@
     "prepare": "npx simple-git-hooks"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
+    "@commitlint/cli": "^17.7.2",
     "@commitlint/config-conventional": "^17.7.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^10.0.4",
@@ -42,8 +42,8 @@
     "@semantic-release/release-notes-generator": "^11.0.7",
     "@types/jest": "^29.5.5",
     "@types/node": "20.5.9",
-    "@typescript-eslint/eslint-plugin": "^6.7.2",
-    "@typescript-eslint/parser": "^6.7.2",
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
     "conventional-changelog-conventionalcommits": "^6.1.0",
     "eslint": "8.48.0",
     "eslint-config-prettier": "^9.0.0",
@@ -52,7 +52,7 @@
     "jest": "^29.7.0",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.5",
     "semantic-release": "^21.1.2",
     "simple-git-hooks": "^2.9.0",
     "ts-jest": "^29.1.1",
