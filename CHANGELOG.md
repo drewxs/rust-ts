@@ -1,3 +1,5 @@
+## [4.1.4](https://github.com/drewxs/rust-ts/compare/v4.1.3...v4.1.4) (2023-10-12)
+
 ## [4.1.3](https://github.com/drewxs/rust-ts/compare/v4.1.2...v4.1.3) (2023-10-10)
 
 ## [4.1.2](https://github.com/drewxs/rust-ts/compare/v4.1.1...v4.1.2) (2023-10-03)
