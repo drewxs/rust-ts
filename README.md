@@ -51,7 +51,7 @@ Rust:
 
 ```rs
 let num = Some(42);
-if let Some(x) {...}
+if let Some(x) = num {...}
 
 let res = Ok(10);
 match res {
