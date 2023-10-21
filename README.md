@@ -63,8 +63,11 @@ match res {
 `rust-ts` equivalent:
 
 ```ts
-let num = Some(42);
-num.some(x => {...});
+let option = Some(42);
+option.some(x => {...});
+// Also possible with Result values
+let result = Ok(42)
+result.ok(x => {...})
 
 let res = Ok(10);
 match(res, {

@@ -249,6 +249,24 @@ export interface ResultBase<T, E> {
      * @returns The result of the pattern match.
      */
     match<R>(pattern: ResultPattern<T, E, R>): R;
+
+    /**
+     * Applies a function to the contained value (if `Ok`).
+     * This function can be used similarly to using `if let Some(x)` in rust, except for Result values.
+     *
+     * @example
+     * ```ts
+     * let x = Ok(0);
+     * x.ok(x => x + 3); // 3
+     * let y = Err("Something went wrong.");
+     * let a = x.ok(x => x + 3, Some(42)) // 42
+     * let b = x.ok(x => x + 3) // Err("Something went wrong.")
+     * ```
+     * @typeParam R - The type of the result of the function.
+     * @param f - The function to apply to the contained value.
+     * @returns The result of applying `f` to the contained value, or returns self if it was a `None`.
+     */
+    ok<U>(f: (x: T) => U, or?: U): U | Err<T, E>;
 }
 
 /**
@@ -294,6 +312,9 @@ export class Ok<T, E> implements ResultBase<T, E> {
     match<R>(pattern: ResultPattern<T, E, R>): R {
         return pattern.ok(this.value);
     }
+    ok<U>(f: (x: T) => U, _?: U): U {
+        return f(this.value);
+    }
 }
 
 /**
@@ -338,6 +359,9 @@ export class Err<T, E> implements ResultBase<T, E> {
     }
     match<R>(pattern: ResultPattern<T, E, R>): R {
         return pattern.err(this.err);
+    }
+    ok<U>(_: (x: T) => U, or?: U): U | Err<T, E> {
+        return or ?? this;
     }
 }
 

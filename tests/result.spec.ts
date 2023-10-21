@@ -128,4 +128,10 @@ describe("Result", () => {
             expect(res).toBe("Enexpected error");
         });
     });
+    describe("ok", () => {
+        it("should execute a callback with the contained value if the value is Ok", () => {
+            const val = Ok(42);
+            val.ok(x => expect(x).toBe(42));
+        });
+    });
 });
