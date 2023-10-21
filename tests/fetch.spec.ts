@@ -1,6 +1,5 @@
 import {fetchr, fetchx} from "../src";
 
-const url = "https://jsonplaceholder.typicode.com/todos";
 interface Todo {
     userId: number;
     id: number;
@@ -8,26 +7,23 @@ interface Todo {
     completed: boolean;
 }
 
+const url = "https://jsonplaceholder.typicode.com/todos";
+const todo: Todo = {
+    userId: 1,
+    id: 1,
+    title: "delectus aut autem",
+    completed: false,
+};
+
 describe("Fetch", () => {
     describe("fetchr", () => {
         it("should fetch a todo", async () => {
             const res = await fetchr<Todo>(`${url}/1`);
-            expect(res.unwrap()).toEqual({
-                userId: 1,
-                id: 1,
-                title: "delectus aut autem",
-                completed: false,
-            });
+            expect(res.unwrap()).toEqual(todo);
         });
         it("should handle fallbacks", async () => {
-            const fallback: Todo = {
-                userId: 1,
-                id: 1,
-                title: "delectus aut autem",
-                completed: false,
-            };
-            const data = (await fetchr<Todo>(`${url}/0`)).unwrap_or(fallback);
-            expect(data).toBe(fallback);
+            const data = (await fetchr<Todo>(`${url}/0`)).unwrap_or(todo);
+            expect(data).toBe(todo);
         });
         it("should handle errors", async () => {
             const res = await fetchr<Todo>(`${url}/0`);
@@ -44,12 +40,7 @@ describe("Fetch", () => {
                 ok: async resp => {
                     expect(resp).toBeInstanceOf(Response);
                     const data: Todo = await resp.json();
-                    expect(data).toEqual({
-                        userId: 1,
-                        id: 1,
-                        title: "delectus aut autem",
-                        completed: false,
-                    });
+                    expect(data).toEqual(todo);
                 },
                 err: async err => expect(err.message).toBe("404 Not Found"),
             });

@@ -74,9 +74,8 @@ describe("Result", () => {
             const error = Error("Something went wrong");
             const result = Err(error);
             expect(() => result.unwrap()).toThrowError("called `unwrap()` on an `Err` value");
-            expect(() => result.expect("Custom error message")).toThrowError(
-                "Custom error message",
-            );
+            const msg = "Custom error message";
+            expect(() => result.expect(msg)).toThrowError(msg);
         });
     });
     describe("unwrap_or", () => {
