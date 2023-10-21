@@ -1,3 +1,10 @@
+## [4.2.0](https://github.com/drewxs/rust-ts/compare/v4.1.5...v4.2.0) (2023-10-21)
+
+
+### Features
+
+* **result:** create method `ok` ([b501823](https://github.com/drewxs/rust-ts/commit/b5018232e97c54bd8246810371af569925fd8d37))
+
 ## [4.1.5](https://github.com/drewxs/rust-ts/compare/v4.1.4...v4.1.5) (2023-10-17)
 
 ## [4.1.4](https://github.com/drewxs/rust-ts/compare/v4.1.3...v4.1.4) (2023-10-12)
