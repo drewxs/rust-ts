@@ -91,7 +91,7 @@ export async function fetchr<T = unknown, E = Error>(
  * @param opts - fetch options.
  * @returns A promise containing the fetch `Response` wrapped in a `Result`.
  */
-export async function fetchx<E = Error>(
+export async function fetchx<E extends Error>(
     url: RequestInfo | URL,
     opts?: RequestInit,
 ): Promise<Result<Response, E>> {
