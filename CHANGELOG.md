@@ -1,3 +1,14 @@
+## [5.0.0](https://github.com/drewxs/rust-ts/compare/v4.2.1...v5.0.0) (2023-11-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **result,option:** CHANGE: Result.ok fallback arg removed.
+
+### Features
+
+* **result,option:** add async support ([609533e](https://github.com/drewxs/rust-ts/commit/609533eff4d88704bc9df943c7af08843aa780ee))
+
 ## [4.2.1](https://github.com/drewxs/rust-ts/compare/v4.2.0...v4.2.1) (2023-10-24)
 
 ## [4.2.0](https://github.com/drewxs/rust-ts/compare/v4.1.5...v4.2.0) (2023-10-21)
