@@ -82,6 +82,15 @@ res.match({
 })
 ```
 
+Methods with callbacks have async variants with the syntax `{name}_async`, allowing passing async callbacks or Promise values.
+
+Example:
+
+```ts
+const add_one_async = async (x: number) => x + 1;
+const result = await Some(1).map_async(add_one_async); // result = Some(2)
+```
+
 ## Modules
 
 ### Result
