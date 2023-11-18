@@ -1,3 +1,10 @@
+## [5.1.0](https://github.com/drewxs/rust-ts/compare/v5.0.0...v5.1.0) (2023-11-18)
+
+
+### Features
+
+* create `Box` implementation ([db7662c](https://github.com/drewxs/rust-ts/commit/db7662c753608105924e4f3caf36dc6d546a7841))
+
 ## [5.0.0](https://github.com/drewxs/rust-ts/compare/v4.2.1...v5.0.0) (2023-11-11)
 
 
