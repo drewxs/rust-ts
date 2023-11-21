@@ -1,3 +1,14 @@
+## [6.0.0](https://github.com/drewxs/rust-ts/compare/v5.1.0...v6.0.0) (2023-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **box:** CHANGE: `map` signature/functionality replaced with `map_mut`. Use constructor with the result instead if new `Box` instances are needed after `map`.
+
+### Bug Fixes
+
+* **box:** replace `map` w/ `map_mut` ([f3b106b](https://github.com/drewxs/rust-ts/commit/f3b106b5f0ea430622bfd233be6d50210f4bba53))
+
 ## [5.1.0](https://github.com/drewxs/rust-ts/compare/v5.0.0...v5.1.0) (2023-11-18)
 
 
