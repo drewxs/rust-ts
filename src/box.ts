@@ -65,9 +65,7 @@ export class Box<T> {
     }
 
     /**
-     * Returns a new Box instance with the result of applying the function to the contained value.
-     * This function does not mutate the original box or its value.
-     * If you want to mutate the value in place, use `map_mut` instead.
+     * Mutates the `Box` value by applying the function to it, then returns self.
      *
      * @example
      * ```ts
@@ -75,14 +73,7 @@ export class Box<T> {
      * x.map(x => x + 2); // Box {value: 5}
      * ```
      */
-    map<U>(f: (value: T) => U): Box<U> {
-        return new Box(f(this.value));
-    }
-
-    /**
-     * Same as `map` but mutates the original box and its value.
-     */
-    map_mut(f: (value: T) => T): Box<T> {
+    map(f: (value: T) => T): Box<T> {
         this.set(f(this.value));
         return this;
     }
@@ -102,7 +93,7 @@ export class Box<T> {
     }
 
     /**
-     * Returns `true` if the contained value is equal to the value contained in the other box.
+     * Returns `true` if the contained value is equal to the value contained in the other `Box`.
      *
      * @example
      * ```ts
@@ -116,7 +107,7 @@ export class Box<T> {
     }
 
     /**
-     * Compares the contained value to the value contained in the other box.
+     * Compares the contained value to the value contained in the other `Box`.
      * Returns `-1` if the value is less than the other value, `1` if it's greater and `0` if they are equal.
      *
      * @example
@@ -137,7 +128,7 @@ export class Box<T> {
     }
 
     /**
-     * Returns a string representation of the box.
+     * Returns a string representation of the `Box`.
      *
      * @example
      * ```ts
@@ -163,7 +154,7 @@ export class Box<T> {
     }
 
     /**
-     * Returns a JSON representation of the box.
+     * Returns a JSON representation of the `Box`.
      * This is the same as calling `JSON.stringify` on the contained value.
      *
      * @example

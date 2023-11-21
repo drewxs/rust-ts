@@ -22,12 +22,7 @@ describe("Box", () => {
     });
     it("should map the contained value", () => {
         const x = new Box(1);
-        const y = x.map(v => v + 1);
-        expect(y.get()).toEqual(2);
-    });
-    it("should map the contained value in place", () => {
-        const x = new Box(1);
-        x.map_mut(v => v + 1);
+        x.map(v => v + 1);
         expect(x.get()).toEqual(2);
     });
     it("should flat_map the contained value", () => {
