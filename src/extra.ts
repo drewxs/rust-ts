@@ -1,0 +1,9 @@
+export const print = console.log;
+export const printe = console.error;
+export const count = console.count;
+export const dir = console.dir;
+export const dbg = console.debug;
+export const table = console.table;
+export const info = console.info;
+export const trace = console.trace;
+export const flush = console.clear;

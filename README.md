@@ -72,12 +72,6 @@ let result = Ok(42)
 result.ok(x => {...})
 
 let res = Ok(10);
-match(res, {
-    ok: x => {...},
-    err: e => {...},
-});
-
-// Alternatively
 res.match({
     ok: x => {...},
     err: e => {...},
@@ -145,12 +139,12 @@ match(result, {
 
 ### match
 
-`match` is available as a standalone function as well as defined methods for `Result` and `Option`.
+`match` and `match_async` are available as instance methods for `Result` and `Option`.
 
 ##### Usage
 
 ```ts
-import {Some, None, Option, Err, Ok, Result, match} from "rust-ts";
+import {Some, None, Option, Err, Ok, Result} from "rust-ts";
 
 const add = (x: number, y: number): Option<number> => (y === 0 ? None() : Some(x + y));
 
@@ -165,7 +159,7 @@ option.match({
 
 const result = option.ok_or("error");
 result.map(x => x + 1).and(x => divide(x, 2));
-match(result, {
+result.match({
     ok: x => console.log(x),
     err: e => console.log(e),
 });
