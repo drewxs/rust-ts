@@ -1,3 +1,16 @@
+## [6.0.1](https://github.com/drewxs/rust-ts/compare/v6.0.0...v6.0.1) (2024-01-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* CHANGE: `match` function removed, prefer to use `Result`/`Option` instance methods `match` and `match_async` instead.
+* CHANGE: `Box` removed, not necessary in TS.
+
+### Code Refactoring
+
+* rm `Box` ([3d52f33](https://github.com/drewxs/rust-ts/commit/3d52f3327bb5bc557ce4b350a42acbbbab08023f))
+* rm `match` ([ee4607d](https://github.com/drewxs/rust-ts/commit/ee4607d355b369d4149e603ac5a147073766acd6))
+
 ## [6.0.0](https://github.com/drewxs/rust-ts/compare/v5.1.0...v6.0.0) (2023-11-21)
 
 
