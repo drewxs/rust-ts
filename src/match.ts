@@ -8,8 +8,6 @@ import {is_result, Result, ResultPattern} from "./result";
  * @typeParam E - The type of the error value.
  * @typeParam R - The type of the result of the match pattern.
  * @param input - The `Result` to match on.
- * @param pattern - The pattern to match over.
- * @returns the result of the pattern match.
  */
 export function match<T, E, R>(input: Result<T, E>, pattern: ResultPattern<T, E, R>): R;
 
@@ -19,11 +17,14 @@ export function match<T, E, R>(input: Result<T, E>, pattern: ResultPattern<T, E,
  * @typeParam T - The type of the value contained in the `Option`.
  * @typeParam R - The type of the result of the match pattern.
  * @param input - The `Option` to match on.
- * @param pattern - The pattern to match over.
- * @returns the result of the pattern match.
  */
 export function match<T, R>(input: Option<T>, pattern: OptionPattern<T, R>): R;
 
+/**
+ * @deprecated Prefer to use the `match` method on the `Result` or `Option` instance.
+ * @param pattern - The pattern to match over.
+ * @returns the result of the pattern match.
+ */
 export function match<T, E, R>(
     input: Result<T, E> | Option<T>,
     pattern: ResultPattern<T, E, R> | OptionPattern<T, R>,

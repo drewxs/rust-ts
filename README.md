@@ -17,7 +17,6 @@ This doc only covers basic usage examples, check the documentation for all metho
 -   [Modules](#modules)
     -   [Result](#Result)
     -   [Option](#Option)
-    -   [Box](#Box)
     -   [match](#match)
     -   [fetch](#fetch)
 
@@ -94,8 +93,6 @@ const add_one_async = async (x: number) => x + 1;
 const result = await Some(1).map_async(add_one_async); // result = Some(2)
 ```
 
-`Box` is implemented focusing on mostly idiomatic TypeScript patterns, with the lack of Rust's ownership system and borrowing rules,
-
 ## Modules
 
 ### Result
@@ -144,24 +141,6 @@ match(result, {
     some: x => console.log(x),
     none: () => console.log("Cannot divide by zero"),
 });
-```
-
-### Box
-
-`Box<T>` is a container abstraction for a mutable instance pointing to an immutable value.
-
-##### Usage
-
-```ts
-import {Box} from "rust-ts";
-
-const x = new Box({name: "John"});
-x.get(); // {name: "John"}
-x.set({name: "Bob"});
-x.get(); // {name: "Bob"}
-x.map(v => ({...v, last_name: "Doe"})); // Box {value: {name: "Bob", last_name: "Doe"}}
-const y = x.serialize(); // {"name":"Bob","last_name":"Doe"}
-Box.deserialize(y); // Box {value: {name: 'Bob', last_name: 'Doe'}}
 ```
 
 ### match
