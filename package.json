@@ -57,9 +57,9 @@
     "simple-git-hooks": "^2.9.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typedoc": "^0.25.8",
+    "typedoc": "^0.25.9",
     "typescript": "5.2.2",
-    "webpack": "^5.90.2"
+    "webpack": "^5.90.3"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
