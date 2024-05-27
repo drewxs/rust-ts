@@ -18,16 +18,13 @@
     "dist/*"
   ],
   "engines": {
-    "node": "^18.x.x",
-    "npm": "use-pnpm",
-    "yarn": "use-pnpm",
-    "pnpm": "^8.x.x"
+    "node": ">=18.x.x"
   },
   "scripts": {
     "build": "rimraf dist && tsc",
     "test": "jest",
     "doc": "rimraf docs && typedoc src/**/*.ts",
-    "serve": "pnpm doc && http-server docs",
+    "serve": "npm run doc && npx http-server docs",
     "lint": "eslint --no-ignore --max-warnings=0 --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "prepare": "npx simple-git-hooks"
@@ -63,7 +60,7 @@
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
-    "pre-push": "pnpm build && pnpm test",
+    "pre-push": "npm run build && npm run test",
     "commit-msg": "npx --no -- commitlint --edit"
   }
 }
