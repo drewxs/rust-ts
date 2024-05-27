@@ -1,4 +1,4 @@
-import {fetchr, fetchx} from "../src";
+import {fetchr} from "../src";
 
 interface Todo {
     userId: number;
@@ -30,19 +30,6 @@ describe("Fetch", () => {
             res.match({
                 ok: data => expect(data).toBe(0),
                 err: err => expect(err.message).toBe("404 Not Found"),
-            });
-        });
-    });
-    describe("fetchx", () => {
-        it("should fetch a todo", async () => {
-            const res = await fetchx(`${url}/1`);
-            res.match({
-                ok: async resp => {
-                    expect(resp).toBeInstanceOf(Response);
-                    const data: Todo = await resp.json();
-                    expect(data).toEqual(todo);
-                },
-                err: async err => expect(err.message).toBe("404 Not Found"),
             });
         });
     });

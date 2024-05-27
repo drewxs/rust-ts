@@ -169,9 +169,7 @@ result.match({
 
 `fetchr` is a wrapper around `fetch` that returns a `Promise<Result<T, E>>` with the data or error values instead of a `Promise<Response>`.
 
-It also resolves the `json`, `text`, or `blob` accordingly based on the `content-type`.
-
-If you need more granular control, use `fetchx` instead, which returns a `Promise<Result<Response, E>>`.
+It also resolves the `json`, `text`, `formData`, or `blob` accordingly based on the `content-type`, returning the raw response if no match.
 
 ##### Usage
 

@@ -38,18 +38,16 @@ export async function fetchr<T = unknown, E = Error>(
 ): Promise<Result<T, E>> {
     try {
         const response = await fetch(url, opts);
-
         if (!response.ok) {
             return new Err(Error(`${response.status} ${response.statusText}`) as E);
         }
 
-        let data;
         const content_type = response.headers.get("content-type");
-
         if (!content_type) {
             return new Err(Error("Content-Type header is missing") as E);
         }
 
+        let data;
         if (content_type.includes("json")) {
             data = await response.json();
         } else if (content_type.includes("text")) {
@@ -59,50 +57,10 @@ export async function fetchr<T = unknown, E = Error>(
         } else if (content_type.includes("octet-stream")) {
             data = await response.blob();
         } else {
-            data = await response.arrayBuffer();
+            data = response;
         }
 
         return new Ok(data);
-    } catch (error) {
-        return new Err(error as E);
-    }
-}
-
-/**
- * Fetch wrapper that returns a `Promise<Result<Response, E>>` instead of a `Promise<Response>`.
- *
- * @example
- * ```ts
- * const url = "https://jsonplaceholder.typicode.com/todos";
- * const result = await fetchx(`${url}/1`);
- *
- * res.match({
- *     ok: async response => {
- *         // do someting with response
- *         const data: Todo = await response.json();
- *         // do someting with data
- *     },
- *     err: async error => {
- *         // handle errors
- *     },
- * });
- * ```
- * @param url - fetch url.
- * @param opts - fetch options.
- * @returns A promise containing the fetch `Response` wrapped in a `Result`.
- */
-export async function fetchx<E extends Error>(
-    url: RequestInfo | URL,
-    opts?: RequestInit,
-): Promise<Result<Response, E>> {
-    try {
-        const response = await fetch(url, opts);
-
-        if (!response.ok) {
-            return new Err(Error(`${response.status} ${response.statusText}`) as E);
-        }
-
-        return new Ok(response);
     } catch (error) {
         return new Err(error as E);
     }
