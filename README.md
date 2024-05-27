@@ -58,8 +58,8 @@ if let Some(x) = num {...}
 let res = Ok(10);
 match res {
     Ok(x) => {...},
-    Err(e) => {...}
-}
+    Err(e) => {...},
+};
 ```
 
 `rust-ts` equivalent:
@@ -68,14 +68,14 @@ match res {
 let option = Some(42);
 option.some(x => {...});
 // Also possible with Result values
-let result = Ok(42)
-result.ok(x => {...})
+let result = Ok(42);
+result.ok(x => {...});
 
 let res = Ok(10);
 res.match({
     ok: x => {...},
     err: e => {...},
-})
+});
 ```
 
 Methods with callbacks have async variants with the syntax `{name}_async`, allowing passing async callbacks or Promise values.
