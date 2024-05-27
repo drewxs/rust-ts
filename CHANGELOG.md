@@ -1,3 +1,14 @@
+## [6.0.3](https://github.com/drewxs/rust-ts/compare/v6.0.2...v6.0.3) (2024-05-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* `fetchx` removed, `fetchr` now resolves to the raw response if there is no content headers match.
+
+### Code Refactoring
+
+* rm `fetchx` ([a1b932e](https://github.com/drewxs/rust-ts/commit/a1b932e205806ead547ac4ba45cfda8ee671d121))
+
 ## [6.0.2](https://github.com/drewxs/rust-ts/compare/v6.0.1...v6.0.2) (2024-02-03)
 
 ## [6.0.1](https://github.com/drewxs/rust-ts/compare/v6.0.0...v6.0.1) (2024-01-09)
